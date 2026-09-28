@@ -143,7 +143,7 @@ return ( <Routes>
   <Route
     path="/registrar/batches/BatchManagement"
     element={
-      <ProtectedRoute allowedRoles={['REGISTRAR', 'ADMIN']}>
+      <ProtectedRoute allowedRoles={['REGISTRAR']}>
         <BatchManagement />
       </ProtectedRoute>
     }

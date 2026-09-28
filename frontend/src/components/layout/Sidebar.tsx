@@ -82,11 +82,6 @@ const sidebarConfig: Record<
             icon: 'fa-solid fa-user-check',
           },
           {
-            label: 'Training & Batches',
-            path: '/registrar/batches/BatchManagement',
-            icon: 'fa-solid fa-layer-group',
-          },
-          {
             label: 'Programs',
             path: '/admin/programs',
             icon: 'fa-solid fa-book-open',
