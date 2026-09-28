@@ -87,6 +87,11 @@ const sidebarConfig: Record<
             icon: 'fa-solid fa-book-open',
           },
           {
+            label: 'Batches & Schedules',
+            path: '/admin/batches',
+            icon: 'fa-solid fa-layer-group',
+          },
+          {
             label: 'Records',
             path: '/admin/records',
             icon: 'fa-solid fa-folder-open',

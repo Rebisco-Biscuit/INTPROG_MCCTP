@@ -47,8 +47,8 @@ const PAGE_SIZE = 10;
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-function BatchManagement() {
-  const batchesEndpoint = '/api/registrar/batches';
+function AdminBatchConfiguration() {
+  const batchesEndpoint = '/api/admin/batches';
 
   // Data
   const [batches, setBatches] = useState<BatchRow[]>([]);
@@ -182,7 +182,7 @@ function BatchManagement() {
       <Header />
 
       <div className="relative flex min-h-0 flex-1">
-        <Sidebar variant="registrar" />
+        <Sidebar variant="admin" />
 
         <main className="min-w-0 flex-1">
           {/* Page Intro */}
@@ -191,7 +191,7 @@ function BatchManagement() {
               <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
                 <div>
                   <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-blue-800">
-                    Registrar Operations
+                    Administration
                   </p>
                   <h1 className="text-4xl font-bold tracking-tight text-slate-950 md:text-5xl">
                     Batch Management
@@ -341,4 +341,4 @@ function BatchManagement() {
   );
 }
 
-export default BatchManagement;
+export default AdminBatchConfiguration;
