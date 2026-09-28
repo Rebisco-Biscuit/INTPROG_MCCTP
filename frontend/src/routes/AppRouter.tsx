@@ -6,6 +6,7 @@ import AdminDashboard from '../pages/users/admin/AdminDashboard'
 import AdminRecords from '../pages/users/admin/AdminRecords'
 import AdminPrograms from '../pages/users/admin/programs/AdminProgramsPage'
 import { AdminStaffAccountsPage } from '../pages/users/admin/staff-accounts/AdminStaffAccountsPage'
+import AdminBatchConfiguration from '../pages/users/admin/batches/AdminBatchConfiguration'
 
 import TrainerDashboard from '../pages/users/trainer/TrainerDashboard'
 import TraineeDashboard from '../pages/users/trainee/TraineeDashboard'
@@ -81,6 +82,16 @@ return ( <Routes>
     </ProtectedRoute>
   }
 />
+
+<Route
+  path="/admin/batches"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <AdminBatchConfiguration />
+    </ProtectedRoute>
+  }
+/>
+
 
 <Route
   path="/admin/staff-accounts/AdminStaffAccountsPage"
