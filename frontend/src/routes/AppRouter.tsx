@@ -4,12 +4,19 @@ import LandingPage from '../pages/public/LandingPage'
 
 import AdminDashboard from '../pages/users/admin/AdminDashboard'
 import AdminRecords from '../pages/users/admin/AdminRecords'
+import AdminPrograms from '../pages/users/admin/programs/AdminProgramsPage'
+import { AdminStaffAccountsPage } from '../pages/users/admin/staff-accounts/AdminStaffAccountsPage'
+import AdminBatchConfiguration from '../pages/users/admin/batches/AdminBatchConfiguration'
 
 import TrainerDashboard from '../pages/users/trainer/TrainerDashboard'
 import TraineeDashboard from '../pages/users/trainee/TraineeDashboard'
+import EncoderDashboard from '../pages/users/encoder/EncoderDashboard'
+import RegistrarDashboard from '../pages/users/registrar/RegistrarDashboard'
 
 import ProtectedRoute from '../components/auth/ProtectedRoute'
 import PublicOnlyRoute from '../components/auth/PublicOnlyRoute'
+import BatchManagement from '../pages/users/registrar/batches/BatchManagement'
+//import path from 'path/win32';
 
 function AppRouter() {
 return ( <Routes>
@@ -58,6 +65,44 @@ return ( <Routes>
     }
   />
 
+  <Route
+  path="/admin/records"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <AdminRecords />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/programs"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <AdminPrograms />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/batches"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <AdminBatchConfiguration />
+    </ProtectedRoute>
+  }
+/>
+
+
+<Route
+  path="/admin/staff-accounts/AdminStaffAccountsPage"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <AdminStaffAccountsPage />
+    </ProtectedRoute>
+  }
+/>
+
+
   {/* ==========================================================
       TRAINER
   ========================================================== */}
@@ -80,6 +125,55 @@ return ( <Routes>
     element={
       <ProtectedRoute allowedRoles={['TRAINEE']}>
         <TraineeDashboard />
+      </ProtectedRoute>
+    }
+  />
+
+  {/* ==========================================================
+      REGISTRAR
+  ========================================================== */}
+
+  <Route
+    path="/registrar"
+    element={
+      <ProtectedRoute allowedRoles={['REGISTRAR']}>
+        <RegistrarDashboard />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/registrar/dashboard"
+    element={
+      <ProtectedRoute allowedRoles={['REGISTRAR']}>
+        <RegistrarDashboard />
+      </ProtectedRoute>
+    }
+  />
+  
+  <Route
+    path="/registrar/batches/BatchManagement"
+    element={
+      <ProtectedRoute allowedRoles={['REGISTRAR']}>
+        <BatchManagement />
+      </ProtectedRoute>
+    }
+  />  
+
+  <Route
+    path="/encoder"
+    element={
+      <ProtectedRoute allowedRoles={['ENCODER']}>
+        <EncoderDashboard />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/encoder/dashboard"
+    element={
+      <ProtectedRoute allowedRoles={['ENCODER']}>
+        <EncoderDashboard />
       </ProtectedRoute>
     }
   />
