@@ -12,20 +12,21 @@ async function bootstrap() {
     }),
   );
 
-
-  const allowedOrigins = (process.env.FRONTEND_URL ?? 'http://localhost:5173')
+  const allowedOrigins = (
+    process.env.FRONTEND_URL ?? 'http://localhost:5173'
+  )
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean);
 
-app.enableCors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true,
-});
+  app.enableCors({
+    origin: allowedOrigins,
+    credentials: true,
+  });
 
-  
-  app.setGlobalPrefix('api');  
-  await app.listen(process.env.PORT ?? 3000);
+  app.setGlobalPrefix('api');
+
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 
 bootstrap();
