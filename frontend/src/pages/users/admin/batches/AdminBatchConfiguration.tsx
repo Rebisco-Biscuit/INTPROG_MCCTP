@@ -48,7 +48,7 @@ const PAGE_SIZE = 10;
 // ─── Component ───────────────────────────────────────────────────────────────
 
 function AdminBatchConfiguration() {
-  const batchesEndpoint = '/api/admin/batches';
+  const batchesEndpoint = `${import.meta.env.VITE_API_URL}/api/admin/batches`;
 
   // Data
   const [batches, setBatches] = useState<BatchRow[]>([]);

@@ -3,7 +3,7 @@
 import { authHeaders } from '../auth.api';
 
 
-const BASE = '/api/admin/staff-accounts';
+const BASE = `${import.meta.env.VITE_API_URL}/api/admin/staff-accounts`;
 
 async function handleResponse<T>(res: Response): Promise<T> {
   const text = await res.text();
