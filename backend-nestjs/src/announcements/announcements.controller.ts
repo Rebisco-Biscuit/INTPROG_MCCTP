@@ -16,7 +16,17 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../common/enums/role.enum';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
-import { AnnouncementsService } from './announcements.service';
+import {
+  AnnouncementListQuery,
+  AnnouncementsService,
+} from './announcements.service';
+import type { AuthenticatedUser } from '../common/types/authenticated-user.type';
+
+/** The parts of the Express request these handlers read. */
+type AnnouncementRequest = {
+  user: AuthenticatedUser;
+  query: AnnouncementListQuery;
+};
 
 @Controller('announcements')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -25,7 +35,7 @@ export class AnnouncementsController {
 
   @Post()
   @Roles(Role.ADMIN, Role.REGISTRAR, Role.ENCODER, Role.TRAINER)
-  create(@Body() dto: CreateAnnouncementDto, @Req() req: any) {
+  create(@Body() dto: CreateAnnouncementDto, @Req() req: AnnouncementRequest) {
     return this.announcementsService.create(dto, req.user);
   }
 
@@ -38,12 +48,12 @@ export class AnnouncementsController {
   @Get()
   // Admins and registrars may fetch the full paginated management list.
   @Roles(Role.ADMIN, Role.REGISTRAR)
-  findAll(@Req() req: any) {
+  findAll(@Req() req: AnnouncementRequest) {
     return this.announcementsService.findAll(req.query, req.user);
   }
 
   @Get('active')
-  findActive(@Req() req: any) {
+  findActive(@Req() req: AnnouncementRequest) {
     return this.announcementsService.findActive(req.user);
   }
 
@@ -52,14 +62,17 @@ export class AnnouncementsController {
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateAnnouncementDto,
-    @Req() req: any,
+    @Req() req: AnnouncementRequest,
   ) {
     return this.announcementsService.update(id, dto, req.user);
   }
 
   @Delete(':id')
   @Roles(Role.ADMIN, Role.REGISTRAR)
-  remove(@Param('id', ParseUUIDPipe) id: string, @Req() req: any) {
+  remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: AnnouncementRequest,
+  ) {
     return this.announcementsService.remove(id, req.user);
   }
 }

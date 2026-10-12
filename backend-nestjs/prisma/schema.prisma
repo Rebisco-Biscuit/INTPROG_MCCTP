@@ -209,7 +209,7 @@ model enrollments {
   id                     String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   trainee_id             String                   @db.Uuid
   batch_id               String                   @db.Uuid
-  enrollment_status      enrollment_status_enum   @default(PENDING)
+  enrollment_status      enrollment_status_enum   @default(ENROLLED)
   uniform_size           size_enum?
   id_card_number         String?                  @unique @db.VarChar(50)
   exit_reason            String?
@@ -229,6 +229,7 @@ model enrollments {
   trainee_outcome_status trainee_outcome_status[]
   withdrawal_request     withdrawal_request[]
 
+  @@unique([trainee_id, batch_id], map: "enrollments_trainee_id_batch_id_key")
   @@index([batch_id], map: "idx_enrollments_batch")
   @@index([enrollment_status], map: "idx_enrollments_status")
   @@index([trainee_id], map: "idx_enrollments_trainee")
@@ -320,18 +321,18 @@ model official_receipts {
 }
 
 model programs {
-  id                               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name                             String          @unique @db.VarChar(50)
+  id                               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                             String             @unique @db.VarChar(50)
+  is_accredited                    Boolean            @default(false)
+  is_active                        Boolean            @default(true)
+  total_training_hours             Decimal?           @db.Decimal(6, 2)
+  approx_months                    String?            @db.VarChar(50)
+  control_number_prefix            String             @db.VarChar(20)
+  created_at                       DateTime           @default(now()) @db.Timestamptz(6)
+  created_by                       String             @db.Uuid
+  updated_by                       String             @db.Uuid
   description                      String?
-  is_accredited                    Boolean         @default(false)
-  is_active                        Boolean         @default(true)
-  total_training_hours             Decimal?        @db.Decimal(6, 2)
-  approx_months                    String?         @db.VarChar(50)
-  control_number_prefix            String          @db.VarChar(20)
-  program_code                   String          @db.VarChar(20)
-  created_at                       DateTime        @default(now()) @db.Timestamptz(6)
-  created_by                       String          @db.Uuid
-  updated_by                       String          @db.Uuid
+  program_code                     String             @db.VarChar(20)
   announcements                    announcements[]
   batch                            batch[]
   batch_seq                        batch_seq[]
@@ -339,21 +340,20 @@ model programs {
   ctrl_num_seq                     ctrl_num_seq[]
   inventory                        inventory[]
   program_schedule                 program_schedule[]
-  users_programs_created_byTousers users           @relation("programs_created_byTousers", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users_programs_updated_byTousers users           @relation("programs_updated_byTousers", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_programs_created_byTousers users              @relation("programs_created_byTousers", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_programs_updated_byTousers users              @relation("programs_updated_byTousers", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([is_active], map: "idx_programs_active")
 }
 
 model program_schedule {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  program_id    String    @db.Uuid
-  schedule_name String    @db.VarChar(50)
+  id            String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  program_id    String     @db.Uuid
+  schedule_name String     @db.VarChar(50)
   days          day_enum[]
-  start_time    DateTime  @db.Time(6)
-  end_time      DateTime  @db.Time(6)
-
-  program       programs  @relation(fields: [program_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  start_time    DateTime   @db.Time(6)
+  end_time      DateTime   @db.Time(6)
+  program       programs   @relation(fields: [program_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([program_id], map: "idx_program_schedule_program")
 }
@@ -405,7 +405,7 @@ model sessions {
 
 model trainee {
   id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  users_id              String?                 @db.Uuid
+  users_id              String?                 @unique(map: "trainee_users_id_key") @db.Uuid
   contact_number        String                  @db.VarChar(15)
   street_address        String                  @db.VarChar(100)
   barangay              String                  @db.VarChar(100)
@@ -426,22 +426,20 @@ model trainee {
   enrollments           enrollments[]
   insurance_coverage    insurance_coverage[]
   users                 users?                  @relation(fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  trainee_beneficiaries trainee_beneficiaries[]
+  trainee_beneficiaries trainee_beneficiaries?
 }
 
 model trainee_beneficiaries {
   id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  trainee_id     String  @db.Uuid
+  trainee_id     String  @unique(map: "trainee_beneficiaries_trainee_id_key") @db.Uuid
   first_name     String  @db.VarChar(50)
   last_name      String  @db.VarChar(50)
   middle_name    String  @db.VarChar(50)
   relationship   String  @db.VarChar(50)
-  contact_number String  @unique @db.VarChar(15)
-  id_number      String  @unique @db.VarChar(50)
+  contact_number String  @db.VarChar(15)
+  id_number      String  @db.VarChar(50)
   address        String  @db.VarChar(100)
   trainee        trainee @relation(fields: [trainee_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@index([trainee_id], map: "idx_beneficiaries_trainee")
 }
 
 model trainee_outcome_status {
@@ -460,15 +458,15 @@ model trainee_outcome_status {
 }
 
 model trainer {
-  id                String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id           String                 @unique @db.Uuid
+  id                String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id           String                  @unique @db.Uuid
   gender            gender_enum?
   complete_address  String?
   highest_education highest_education_enum?
   date_of_birth     DateTime?               @db.Date
   contact_number    String?                 @db.VarChar(15)
   batch             batch[]
-  users             users                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users             users                   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model training_session {
@@ -504,7 +502,7 @@ model users {
   is_active                           Boolean                  @default(true)
   created_at                          DateTime                 @default(now()) @db.Timestamptz(6)
   updated_at                          DateTime                 @default(now()) @db.Timestamptz(6)
-  system_id                           String?                  @unique @db.VarChar(30)
+  system_id                           String?                  @unique @db.VarChar(100)
   email                               String?                  @unique
   announcements                       announcements[]
   attendance                          attendance[]
@@ -520,7 +518,7 @@ model users {
   programs_programs_updated_byTousers programs[]               @relation("programs_updated_byTousers")
   requirement_checklist               requirement_checklist[]
   sessions                            sessions[]
-  trainee                             trainee[]
+  trainee                             trainee?
   trainee_outcome_status              trainee_outcome_status[]
   trainer                             trainer?
   training_session                    training_session[]

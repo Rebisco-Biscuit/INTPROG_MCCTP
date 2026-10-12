@@ -57,7 +57,7 @@ const sidebarConfig: Record<
         items: [
           {
             label: 'Dashboard',
-            path: '/admin/AdminDashboard',
+            path: '/admin/dashboard',
             icon: 'fa-solid fa-gauge-high',
           },
           {
@@ -100,6 +100,11 @@ const sidebarConfig: Record<
             label: 'Records',
             path: '/admin/records',
             icon: 'fa-solid fa-folder-open',
+          },
+          {
+            label: 'Announcements',
+            path: '/admin/announcements',
+            icon: 'fa-solid fa-bullhorn',
           },
           {
             label: 'Payments',

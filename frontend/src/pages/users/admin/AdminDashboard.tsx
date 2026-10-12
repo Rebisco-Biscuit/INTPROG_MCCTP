@@ -35,7 +35,8 @@ const AdminDashboard: React.FC = () => {
     const fetchExpirations = async () => {
       try {
         //session track test
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/sessions/expires`)
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+        const response = await fetch(`${apiUrl}/sessions/expires`)
         const data = await response.json()
 
         console.log('Session Expirations:', data)

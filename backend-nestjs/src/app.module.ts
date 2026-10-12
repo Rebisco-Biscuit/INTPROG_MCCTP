@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaService } from './prisma/prisma.service';
+import { PrismaModule } from './prisma/prisma.module';
 import { SessionsController } from './sessions/sessions.controller';
 import { SessionsService } from './sessions/sessions.service';
 import { AuthModule } from './auth/auth.module';
@@ -14,6 +14,7 @@ import { ChatbotModule } from './chatbot/chatbot.module';
 import { ProgramsModule } from './users/admin/programs/programs.module';
 import { StaffAccountsModule } from './users/admin/staff-accounts/staff-accounts.module';
 import { BatchesModule } from './users/registrar/batches/batches.module';
+import { RegistrarModule } from './users/registrar/registrar.module';
 import { AdminBatchesModule } from './users/admin/batches/batches.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
 
@@ -30,23 +31,22 @@ import { AnnouncementsModule } from './announcements/announcements.module';
       },
     ]),
 
+    // Global: provides the single shared PrismaService (one connection pool)
+    PrismaModule,
     AuthModule,
     ChatbotModule,
     ProgramsModule,
     StaffAccountsModule,
     BatchesModule,
+    RegistrarModule,
     AdminBatchesModule,
     AnnouncementsModule,
   ],
 
-  controllers: [
-    SessionsController,
-    AppController,
-  ],
+  controllers: [SessionsController, AppController],
 
   providers: [
     AppService,
-    PrismaService,
     SessionsService,
 
     {

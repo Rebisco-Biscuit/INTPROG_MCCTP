@@ -12,7 +12,6 @@ async function bootstrap() {
     }),
   );
 
-
   const allowedOrigins = (process.env.FRONTEND_URL ?? 'http://localhost:5173')
     .split(',')
     .map((origin) => origin.trim())
@@ -21,9 +20,12 @@ async function bootstrap() {
   app.enableCors({
     origin: allowedOrigins,
   });
-  
-  app.setGlobalPrefix('api');  
+
+  app.setGlobalPrefix('api');
   await app.listen(process.env.PORT ?? 3000);
 }
 
-bootstrap();
+bootstrap().catch((error) => {
+  console.error('Failed to start the server:', error);
+  process.exit(1);
+});
