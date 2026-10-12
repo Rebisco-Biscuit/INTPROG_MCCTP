@@ -15,7 +15,10 @@ import { Role } from '../../../common/enums/role.enum';
 import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../../common/types/authenticated-user.type';
 import { EnrollmentsService } from '../../../enrollments/enrollments.service';
-import { CreateEnrollmentDto } from '../../../enrollments/dto/create-enrollment.dto';
+import {
+  CreateEnrollmentDto,
+  RequirementChecklistDto,
+} from '../../../enrollments/dto/create-enrollment.dto';
 import {
   UpdateEnrollmentStatusDto,
   EnrollmentFilterDto,
@@ -73,6 +76,19 @@ export class EnrollmentsController {
     return this.enrollmentsService.updateEnrollmentStatus(
       enrollmentId,
       updateDto,
+    );
+  }
+
+  @Patch('enrollments/:id/requirements')
+  async updateRequirementChecklist(
+    @Param('id') enrollmentId: string,
+    @Body() checklist: RequirementChecklistDto,
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ) {
+    return this.enrollmentsService.updateRequirementChecklist(
+      enrollmentId,
+      checklist,
+      currentUser.id,
     );
   }
 }

@@ -216,6 +216,32 @@ export async function createEnrollment(enrollmentData: {
 }
 
 /**
+ * Save the registrar's edit of an enrollment's submitted documents
+ */
+export async function updateRequirementChecklist(
+  enrollmentId: string,
+  checklist: {
+    bcNsoPsaCopy: boolean;
+    diplomaTor: boolean;
+    brgyClearance: boolean;
+    oneByOnePic: boolean;
+    twoByTwoPic: boolean;
+    passportSize: boolean;
+  },
+) {
+  try {
+    const response = await registrarApi.patch(
+      `/enrollments/${enrollmentId}/requirements`,
+      checklist,
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating submitted documents:', error);
+    throw error;
+  }
+}
+
+/**
  * Update enrollment status
  */
 export async function updateEnrollmentStatus(

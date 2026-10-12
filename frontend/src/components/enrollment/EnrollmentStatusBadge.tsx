@@ -4,46 +4,22 @@ interface EnrollmentStatusBadgeProps {
   status: 'PENDING' | 'ENROLLED' | 'WITHDRAWN' | 'COMPLETED' | 'DROPPED';
 }
 
-const EnrollmentStatusBadge: React.FC<EnrollmentStatusBadgeProps> = ({ status }) => {
-  const getStatusStyles = () => {
-    switch (status) {
-      case 'PENDING':
-        return 'bg-yellow-50 text-yellow-700 border-yellow-200';
-      case 'ENROLLED':
-        return 'bg-green-50 text-green-700 border-green-200';
-      case 'WITHDRAWN':
-        return 'bg-red-50 text-red-700 border-red-200';
-      case 'COMPLETED':
-        return 'bg-blue-50 text-blue-700 border-blue-200';
-      case 'DROPPED':
-        return 'bg-red-50 text-red-700 border-red-200';
-      default:
-        return 'bg-gray-50 text-gray-700 border-gray-200';
-    }
-  };
+// Dot + small uppercase label, matching ProgramStatusBadge on the admin Programs page
+const STATUS_STYLES: Record<string, { dot: string; text: string; label: string }> = {
+  PENDING: { dot: 'bg-yellow-500', text: 'text-yellow-700', label: 'Pending' },
+  ENROLLED: { dot: 'bg-green-600', text: 'text-green-700', label: 'Enrolled' },
+  WITHDRAWN: { dot: 'bg-red-500', text: 'text-red-700', label: 'Withdrawn' },
+  COMPLETED: { dot: 'bg-blue-700', text: 'text-blue-800', label: 'Completed' },
+  DROPPED: { dot: 'bg-red-500', text: 'text-red-700', label: 'Dropped' },
+};
 
-  const getStatusLabel = () => {
-    switch (status) {
-      case 'PENDING':
-        return 'Pending';
-      case 'ENROLLED':
-        return 'Enrolled';
-      case 'WITHDRAWN':
-        return 'Withdrawn';
-      case 'COMPLETED':
-        return 'Completed';
-      case 'DROPPED':
-        return 'Dropped';
-      default:
-        return status;
-    }
-  };
+const EnrollmentStatusBadge: React.FC<EnrollmentStatusBadgeProps> = ({ status }) => {
+  const style = STATUS_STYLES[status] ?? { dot: 'bg-slate-300', text: 'text-slate-500', label: status };
 
   return (
-    <span
-      className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getStatusStyles()}`}
-    >
-      {getStatusLabel()}
+    <span className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider">
+      <span className={`h-1.5 w-1.5 rounded-full ${style.dot}`} />
+      <span className={style.text}>{style.label}</span>
     </span>
   );
 };

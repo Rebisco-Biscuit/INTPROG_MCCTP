@@ -9,6 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
   CreateEnrollmentDto,
   TraineeInfoDto,
+  RequirementChecklistDto,
 } from './dto/create-enrollment.dto';
 import {
   UpdateEnrollmentStatusDto,
@@ -1050,6 +1051,33 @@ export class EnrollmentsService {
                 middle_name: true,
               },
             },
+            // Every program this trainee is enrolled in, one entry per batch
+            enrollments: {
+              orderBy: { enrolled_at: 'asc' },
+              select: {
+                id: true,
+                enrollment_status: true,
+                uniform_size: true,
+                id_card_number: true,
+                enrolled_at: true,
+                batch: {
+                  select: {
+                    id: true,
+                    batch_name: true,
+                    start_date: true,
+                    end_date: true,
+                    programs: {
+                      select: { id: true, name: true, is_accredited: true },
+                    },
+                  },
+                },
+                official_receipts: {
+                  select: { or_number: true },
+                  orderBy: { created_at: 'desc' },
+                  take: 1,
+                },
+              },
+            },
           },
         },
         batch: {
@@ -1063,6 +1091,7 @@ export class EnrollmentsService {
               select: {
                 id: true,
                 name: true,
+                is_accredited: true,
               },
             },
           },
@@ -1140,6 +1169,56 @@ export class EnrollmentsService {
               .filter(Boolean)
               .join('\n\n')
           : enrollment.remarks,
+      },
+    });
+  }
+
+  /**
+   * Saves the registrar's edit of an enrollment's submitted documents.
+   * Creates the checklist if the enrollment has none yet (older records).
+   */
+  async updateRequirementChecklist(
+    enrollmentId: string,
+    checklist: RequirementChecklistDto,
+    checkedByUserId: string,
+  ) {
+    const enrollment = await this.prisma.enrollments.findUnique({
+      where: { id: enrollmentId },
+      select: { id: true },
+    });
+
+    if (!enrollment) {
+      throw new NotFoundException('Enrollment not found.');
+    }
+
+    const data = {
+      bc_nso_psa_copy: checklist.bcNsoPsaCopy,
+      diploma_tor: checklist.diplomaTor,
+      brgy_clearance: checklist.brgyClearance,
+      one_by_one_pic: checklist.oneByOnePic,
+      two_by_two_pic: checklist.twoByTwoPic,
+      passport_size: checklist.passportSize,
+      // Omitted remarks keep the existing value
+      remarks: checklist.remarks,
+      checked_by: checkedByUserId,
+      checked_at: new Date(),
+    };
+
+    return this.prisma.requirement_checklist.upsert({
+      where: { enrollment_id: enrollmentId },
+      update: data,
+      create: { enrollment_id: enrollmentId, ...data },
+      select: {
+        id: true,
+        bc_nso_psa_copy: true,
+        diploma_tor: true,
+        brgy_clearance: true,
+        one_by_one_pic: true,
+        two_by_two_pic: true,
+        passport_size: true,
+        commitment_fee: true,
+        remarks: true,
+        checked_at: true,
       },
     });
   }
