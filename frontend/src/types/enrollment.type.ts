@@ -57,16 +57,27 @@ export interface RequirementChecklistData {
   remarks?: string;
 }
 
+export interface BatchSchedule {
+  days: string[]; // e.g. ['MON', 'WED']
+  startTime: string; // HH:mm
+  endTime: string; // HH:mm
+}
+
 export interface BatchInfo {
   id: string;
   batchName: string;
   programId: string;
   programName: string;
+  programIsAccredited: boolean;
+  programPrefix: string;
+  schedules: BatchSchedule[];
   startDate: string;
   endDate: string;
   capacity: number;
   remainingCapacity: number;
   batchStatus: 'OPEN' | 'ONGOING' | 'CLOSED' | 'CANCELLED';
+  eligible: boolean; // false = shown in red and cannot be selected
+  blockedReason: string | null; // why the trainee cannot enroll in this batch
 }
 
 export interface EnrollmentFormData {
@@ -89,6 +100,16 @@ export interface SearchedTrainee {
   contact_number: string;
   date_of_birth: string;
   gender: string;
+  // One beneficiary per trainee (single object, not an array); null if none saved yet
+  trainee_beneficiaries?: {
+    first_name: string;
+    middle_name: string;
+    last_name: string;
+    relationship: string;
+    contact_number: string;
+    address: string;
+    id_number: string;
+  } | null;
 }
 
 export interface Program {

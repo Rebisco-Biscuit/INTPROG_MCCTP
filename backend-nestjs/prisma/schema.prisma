@@ -229,6 +229,7 @@ model enrollments {
   trainee_outcome_status trainee_outcome_status[]
   withdrawal_request     withdrawal_request[]
 
+  @@unique([trainee_id, batch_id], map: "enrollments_trainee_id_batch_id_key")
   @@index([batch_id], map: "idx_enrollments_batch")
   @@index([enrollment_status], map: "idx_enrollments_status")
   @@index([trainee_id], map: "idx_enrollments_trainee")
@@ -404,7 +405,7 @@ model sessions {
 
 model trainee {
   id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  users_id              String?                 @db.Uuid
+  users_id              String?                 @unique(map: "trainee_users_id_key") @db.Uuid
   contact_number        String                  @db.VarChar(15)
   street_address        String                  @db.VarChar(100)
   barangay              String                  @db.VarChar(100)
@@ -425,22 +426,20 @@ model trainee {
   enrollments           enrollments[]
   insurance_coverage    insurance_coverage[]
   users                 users?                  @relation(fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  trainee_beneficiaries trainee_beneficiaries[]
+  trainee_beneficiaries trainee_beneficiaries?
 }
 
 model trainee_beneficiaries {
   id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  trainee_id     String  @db.Uuid
+  trainee_id     String  @unique(map: "trainee_beneficiaries_trainee_id_key") @db.Uuid
   first_name     String  @db.VarChar(50)
   last_name      String  @db.VarChar(50)
   middle_name    String  @db.VarChar(50)
   relationship   String  @db.VarChar(50)
-  contact_number String  @unique @db.VarChar(15)
-  id_number      String  @unique @db.VarChar(50)
+  contact_number String  @db.VarChar(15)
+  id_number      String  @db.VarChar(50)
   address        String  @db.VarChar(100)
   trainee        trainee @relation(fields: [trainee_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@index([trainee_id], map: "idx_beneficiaries_trainee")
 }
 
 model trainee_outcome_status {
@@ -503,7 +502,7 @@ model users {
   is_active                           Boolean                  @default(true)
   created_at                          DateTime                 @default(now()) @db.Timestamptz(6)
   updated_at                          DateTime                 @default(now()) @db.Timestamptz(6)
-  system_id                           String?                  @unique @db.VarChar(30)
+  system_id                           String?                  @unique @db.VarChar(100)
   email                               String?                  @unique
   announcements                       announcements[]
   attendance                          attendance[]
@@ -519,7 +518,7 @@ model users {
   programs_programs_updated_byTousers programs[]               @relation("programs_updated_byTousers")
   requirement_checklist               requirement_checklist[]
   sessions                            sessions[]
-  trainee                             trainee[]
+  trainee                             trainee?
   trainee_outcome_status              trainee_outcome_status[]
   trainer                             trainer?
   training_session                    training_session[]

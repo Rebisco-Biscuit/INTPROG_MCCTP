@@ -13,6 +13,7 @@ import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/roles.decorator';
 import { Role } from '../../../common/enums/role.enum';
 import { CurrentUser } from '../../../common/decorators/current-user.decorator';
+import type { AuthenticatedUser } from '../../../common/types/authenticated-user.type';
 import { EnrollmentsService } from '../../../enrollments/enrollments.service';
 import { CreateEnrollmentDto } from '../../../enrollments/dto/create-enrollment.dto';
 import {
@@ -59,7 +60,7 @@ export class EnrollmentsController {
   @Post('enrollments')
   async createEnrollment(
     @Body() createDto: CreateEnrollmentDto,
-    @CurrentUser() currentUser: any,
+    @CurrentUser() currentUser: AuthenticatedUser,
   ) {
     return this.enrollmentsService.createEnrollment(createDto, currentUser.id);
   }

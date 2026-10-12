@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { getEnrollments, getPrograms } from '../../api/enrollments/enrollment.api';
 import EnrollmentStatusBadge from './EnrollmentStatusBadge';
 import type { EnrollmentRecord, Program } from '../../types/enrollment.type';
@@ -40,7 +40,7 @@ const EnrollmentTable: React.FC<EnrollmentTableProps> = ({ onSelectEnrollment })
     }
   }
 
-  async function loadEnrollments() {
+  const loadEnrollments = useCallback(async () => {
     const currentRequest = ++requestNumber.current;
 
     try {
@@ -68,19 +68,20 @@ const EnrollmentTable: React.FC<EnrollmentTableProps> = ({ onSelectEnrollment })
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [search, programIdFilter, statusFilter, startDate, endDate, pageNumber]);
 
   useEffect(() => {
     void loadInitialData();
   }, []);
 
+  // loadEnrollments changes whenever a filter changes, which re-runs this effect
   useEffect(() => {
     const timer = window.setTimeout(() => {
       void loadEnrollments();
     }, search.trim() ? 300 : 0);
 
     return () => window.clearTimeout(timer);
-  }, [search, programIdFilter, statusFilter, startDate, endDate, pageNumber]);
+  }, [loadEnrollments, search]);
 
   const handleResetFilters = () => {
     setProgramIdFilter('');

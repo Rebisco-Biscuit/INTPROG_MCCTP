@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import type { EnrollmentFormData, TraineeData, RequirementChecklistData, BatchInfo, Program } from '../../types/enrollment.type';
-import { createEnrollment, searchTrainees, getAvailableBatches, getPrograms } from '../../api/enrollments/enrollment.api';
+import type { EnrollmentFormData, TraineeData, RequirementChecklistData, BatchInfo } from '../../types/enrollment.type';
+import { createEnrollment, searchTrainees, getAvailableBatches } from '../../api/enrollments/enrollment.api';
 import EnrollmentStatusBadge from './EnrollmentStatusBadge';
 
 interface EnrollmentFormWizardProps {
@@ -241,6 +241,37 @@ const EnrollmentFormWizard: React.FC<EnrollmentFormWizardProps> = ({
             </div>
           )}
 
+          {/* Portal login, large and high-contrast so the trainee can take a photo of it */}
+          {successResult?.portalAccount?.username && (
+            <div className="mb-6 rounded-lg border-2 border-blue-900 bg-blue-50 p-6 text-left">
+              <p className="text-xs font-semibold uppercase tracking-wider text-blue-900">
+                Trainee Portal Login
+              </p>
+              <p className="mt-1 text-sm text-slate-700">
+                {formData.trainee.firstName} {formData.trainee.lastName}: please take a photo of this box.
+              </p>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Username</p>
+                  <p className="break-all font-mono text-xl font-bold text-slate-950">{successResult.portalAccount.username}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Password</p>
+                  {successResult.portalAccount.isNewAccount ? (
+                    <p className="break-all font-mono text-xl font-bold text-slate-950">{successResult.portalAccount.temporaryPassword}</p>
+                  ) : (
+                    <p className="text-sm font-medium text-slate-900">Unchanged: use your current password</p>
+                  )}
+                </div>
+              </div>
+              <p className="mt-4 text-xs text-slate-600">
+                {successResult.portalAccount.isNewAccount
+                  ? 'New account. Keep these details private.'
+                  : 'Existing account: this enrollment was added to it.'}
+              </p>
+            </div>
+          )}
+
           <button type="button" onClick={() => onSuccess(successResult)} className="px-5 py-2.5 text-sm font-semibold text-white bg-blue-900 hover:bg-blue-800 rounded-md transition">
             Return to Enrollment Module
           </button>
@@ -384,14 +415,15 @@ const Step1TraineeInfo: React.FC<{
       gender: trainee.gender || 'MALE',
       hasActiveInsurance: trainee.hasActiveInsurance,
       isExistingTrainee: true,
+      // Pre-fill the saved beneficiary; the registrar can still edit it
       beneficiary: {
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        relationship: '',
-        contactNumber: '',
-        address: '',
-        idNumber: '',
+        firstName: trainee.trainee_beneficiaries?.first_name || '',
+        middleName: trainee.trainee_beneficiaries?.middle_name || '',
+        lastName: trainee.trainee_beneficiaries?.last_name || '',
+        relationship: trainee.trainee_beneficiaries?.relationship || '',
+        contactNumber: trainee.trainee_beneficiaries?.contact_number || '',
+        address: trainee.trainee_beneficiaries?.address || '',
+        idNumber: trainee.trainee_beneficiaries?.id_number || '',
       },
     });
     setSearchQuery('');
@@ -536,35 +568,16 @@ const Step2BatchSelection: React.FC<{
   onBatchChange: (batchId: string) => void;
 }> = ({ traineeId, batchId, onBatchChange }) => {
   const [batches, setBatches] = useState<BatchInfo[]>([]);
-  const [programs, setPrograms] = useState<Program[]>([]);
   const [selectedProgramId, setSelectedProgramId] = useState('');
   const [programQuery, setProgramQuery] = useState('');
-  const [showAllPrograms, setShowAllPrograms] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  async function loadBatches() {
+  const loadBatches = React.useCallback(async () => {
     try {
       setIsLoading(true);
-      const batchData = await getAvailableBatches(traineeId);
-      setBatches(batchData || []);
-      try {
-        const programData = await getPrograms();
-        setPrograms(programData || []);
-      } catch (programError) {
-        console.error('Error loading programs:', programError);
-        const fallbackPrograms: Program[] = [];
-        (batchData || []).forEach((batch: BatchInfo) => {
-          if (!fallbackPrograms.some((program: Program) => program.id === batch.programId)) {
-            fallbackPrograms.push({
-              id: batch.programId,
-              name: batch.programName,
-              control_number_prefix: '',
-            });
-          }
-        });
-        setPrograms(fallbackPrograms);
-      }
+      const batchData: BatchInfo[] = (await getAvailableBatches(traineeId)) || [];
+      setBatches(batchData);
       setError(null);
     } catch (err) {
       console.error('Error loading batches:', err);
@@ -574,18 +587,47 @@ const Step2BatchSelection: React.FC<{
     } finally {
       setIsLoading(false);
     }
-  }
-
-  const availableProgramIds = new Set(batches.map((batch) => batch.programId));
-  const filteredPrograms = programs
-    .filter((program) => availableProgramIds.has(program.id))
-    .filter((program) => program.name.toLowerCase().includes(programQuery.trim().toLowerCase()));
-  const visiblePrograms = showAllPrograms || programQuery.trim() ? filteredPrograms : filteredPrograms.slice(0, 5);
-  const selectedBatches = batches.filter((batch) => batch.programId === selectedProgramId);
+  }, [traineeId]);
 
   React.useEffect(() => {
     void loadBatches();
-  }, [traineeId]);
+  }, [loadBatches]);
+
+  // A previously chosen batch may no longer be allowed (e.g. another trainee was selected).
+  // Runs only after loading, and stops once the selection has been cleared.
+  React.useEffect(() => {
+    if (!isLoading && batchId && !batches.some((batch) => batch.id === batchId && batch.eligible)) {
+      onBatchChange('');
+    }
+  }, [isLoading, batches, batchId, onBatchChange]);
+
+  // One entry per program that has an open batch, built from the batches themselves
+  const programSummaries = Array.from(
+    batches.reduce((summaries, batch) => {
+      const summary = summaries.get(batch.programId) ?? {
+        id: batch.programId,
+        name: batch.programName,
+        prefix: batch.programPrefix,
+        isAccredited: batch.programIsAccredited,
+        available: 0,
+        blocked: 0,
+      };
+      if (batch.eligible) summary.available += 1;
+      else summary.blocked += 1;
+      return summaries.set(batch.programId, summary);
+    }, new Map<string, { id: string; name: string; prefix: string; isAccredited: boolean; available: number; blocked: number }>()).values(),
+  ).sort((a, b) => Number(b.available > 0) - Number(a.available > 0) || a.name.localeCompare(b.name));
+
+  const query = programQuery.trim().toLowerCase();
+  const filteredPrograms = programSummaries.filter((program) => !query || program.name.toLowerCase().includes(query) || program.prefix.toLowerCase().includes(query));
+  const selectedProgram = programSummaries.find((program) => program.id === selectedProgramId);
+  const selectedBatches = batches
+    .filter((batch) => batch.programId === selectedProgramId)
+    .sort((a, b) => Number(b.eligible) - Number(a.eligible));
+  const formatSchedules = (batch: BatchInfo) =>
+    batch.schedules.length
+      ? batch.schedules.map((schedule) => `${schedule.days.join('/')} ${schedule.startTime}–${schedule.endTime}`).join(' + ')
+      : 'No schedule set';
 
   if (isLoading) {
     return (
@@ -614,7 +656,7 @@ const Step2BatchSelection: React.FC<{
     <div className="space-y-3">
       {batches.length === 0 ? (
         <div className="text-center py-6 bg-slate-50 border border-slate-200 rounded-md">
-          <p className="text-slate-600">No available batches at this time</p>
+          <p className="text-slate-600">No open batches at this time</p>
           <button
             type="button"
             onClick={loadBatches}
@@ -624,41 +666,76 @@ const Step2BatchSelection: React.FC<{
           </button>
         </div>
       ) : (
-        <>
-          <div className="mb-3 flex items-center gap-2">
-            <input type="search" value={programQuery} onChange={(event) => { setProgramQuery(event.target.value); setShowAllPrograms(true); }} placeholder="Search program name" aria-label="Search program name" className={inputClass} />
-            <button
-              type="button"
-              onClick={loadBatches}
-              disabled={isLoading}
-              className="whitespace-nowrap rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Refresh
-            </button>
-          </div>
-          <div className="divide-y divide-slate-200 border-y border-slate-200">
-            {visiblePrograms.map((program) => (
-              <React.Fragment key={program.id}>
-                <button type="button" onClick={() => { setSelectedProgramId(selectedProgramId === program.id ? '' : program.id); onBatchChange(''); }} className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-slate-50">
-                  <span className="font-medium text-slate-900">{program.name}</span>
-                  <span className="text-xs text-slate-500">({batches.filter((batch) => batch.programId === program.id).length} available batches)</span>
+        <div className="grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+          {/* Program box */}
+          <section className="rounded-md border border-slate-200" aria-label="Programs">
+            <div className="flex items-center gap-2 border-b border-slate-200 p-3">
+              <input type="search" value={programQuery} onChange={(event) => setProgramQuery(event.target.value)} placeholder="Search program or prefix" aria-label="Search program" className={inputClass} />
+              <button
+                type="button"
+                onClick={loadBatches}
+                disabled={isLoading}
+                className="whitespace-nowrap rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Refresh
+              </button>
+            </div>
+            <div className="max-h-96 divide-y divide-slate-200 overflow-y-auto">
+              {filteredPrograms.length === 0 && <p className="p-3 text-sm text-slate-500">No programs match “{programQuery.trim()}”.</p>}
+              {filteredPrograms.map((program) => (
+                <button
+                  key={program.id}
+                  type="button"
+                  onClick={() => { if (program.id !== selectedProgramId) { setSelectedProgramId(program.id); onBatchChange(''); } }}
+                  aria-pressed={program.id === selectedProgramId}
+                  className={`block w-full px-3 py-2.5 text-left transition ${program.id === selectedProgramId ? 'bg-blue-50 ring-1 ring-inset ring-blue-700' : 'hover:bg-slate-50'}`}
+                >
+                  <span className="block font-medium text-slate-900">{program.name}</span>
+                  <span className="mt-0.5 block text-xs text-slate-500">
+                    {program.isAccredited ? 'Accredited' : 'Non-accredited'} · {program.available} available
+                    {program.blocked > 0 && <span className="text-red-700"> · {program.blocked} blocked</span>}
+                  </span>
                 </button>
-                {selectedProgramId === program.id && <div className="bg-slate-50 px-3 pb-3 pl-8">
-                  {selectedBatches.map((batch) => (
-                    <label key={batch.id} className={`flex cursor-pointer items-center gap-3 border-b border-slate-200 py-2 text-sm last:border-b-0 ${batchId === batch.id ? 'text-blue-900' : 'text-slate-700'}`}>
-                      
-                      <input type="radio" name="batch" value={batch.id} checked={batchId === batch.id} onChange={(event) => onBatchChange(event.target.value)} className="h-3.5 w-3.5" />
-                      <span className="min-w-0 flex-1 font-medium">{batch.batchName}</span>
-                      <span className="whitespace-nowrap text-xs text-slate-500">Start: {new Date(batch.startDate).toLocaleDateString()} &nbsp; End: {new Date(batch.endDate).toLocaleDateString()} &nbsp; Remaining Slots: {batch.remainingCapacity} / {batch.capacity}</span>
+              ))}
+            </div>
+          </section>
+
+          {/* Batch box */}
+          <section className="rounded-md border border-slate-200" aria-label="Batches">
+            <h4 className="border-b border-slate-200 p-3 text-sm font-semibold text-slate-900">
+              {selectedProgram ? `Batches: ${selectedProgram.name}` : 'Batches'}
+            </h4>
+            {!selectedProgram ? (
+              <p className="p-3 text-sm text-slate-500">Select a program to see its batches.</p>
+            ) : (
+              <div className="max-h-96 space-y-2 overflow-y-auto p-3">
+                {selectedBatches.map((batch) => {
+                  const details = (
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-medium">{batch.batchName}</span>
+                      <span className="block text-xs">
+                        {new Date(batch.startDate).toLocaleDateString()} – {new Date(batch.endDate).toLocaleDateString()} · {formatSchedules(batch)}
+                      </span>
+                      <span className="block text-xs">Remaining slots: {batch.remainingCapacity} / {batch.capacity}</span>
+                      {!batch.eligible && <span className="mt-1 block text-xs font-medium">{batch.blockedReason}</span>}
+                    </span>
+                  );
+                  return batch.eligible ? (
+                    <label key={batch.id} className={`flex cursor-pointer items-start gap-3 rounded-md border p-3 text-sm transition ${batchId === batch.id ? 'border-blue-700 bg-blue-50 text-blue-900' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}`}>
+                      <input type="radio" name="batch" value={batch.id} checked={batchId === batch.id} onChange={(event) => onBatchChange(event.target.value)} className="mt-1 h-3.5 w-3.5" />
+                      {details}
                     </label>
-                  ))}
-                </div>}
-              </React.Fragment>
-            ))}
-          </div>
-          {!programQuery.trim() && filteredPrograms.length > 5 && <button type="button" onClick={() => setShowAllPrograms((current) => !current)} className="w-full py-2.5 text-left text-sm font-medium text-slate-600 hover:text-slate-900">{showAllPrograms ? 'Show less' : '... Show more'}</button>}
-          {selectedProgramId && selectedBatches.length === 0 && <p className="text-sm text-slate-500">No open batches remain in this program.</p>}
-        </>
+                  ) : (
+                    <div key={batch.id} aria-disabled="true" className="flex cursor-not-allowed items-start gap-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+                      <input type="radio" name="batch" value={batch.id} disabled aria-label={`${batch.batchName} (unavailable)`} className="mt-1 h-3.5 w-3.5" />
+                      {details}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        </div>
       )}
     </div>
   );

@@ -16,6 +16,7 @@ import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/roles.decorator';
 import { Role } from '../../../common/enums/role.enum';
+import type { AuthenticatedUser } from '../../../common/types/authenticated-user.type';
 
 @Controller('admin/programs')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -46,7 +47,10 @@ export class ProgramsController {
   }
 
   @Post()
-  create(@Body() dto: CreateProgramDto, @Req() req: any) {
+  create(
+    @Body() dto: CreateProgramDto,
+    @Req() req: { user: AuthenticatedUser },
+  ) {
     return this.programsService.create(dto, req.user.id);
   }
 
@@ -54,13 +58,16 @@ export class ProgramsController {
   update(
     @Param('id') id: string,
     @Body() dto: UpdateProgramDto,
-    @Req() req: any,
+    @Req() req: { user: AuthenticatedUser },
   ) {
     return this.programsService.update(id, dto, req.user.id);
   }
 
   @Patch(':id/status')
-  updateStatus(@Param('id') id: string, @Req() req: any) {
+  updateStatus(
+    @Param('id') id: string,
+    @Req() req: { user: AuthenticatedUser },
+  ) {
     return this.programsService.updateStatus(id, req.user.id);
   }
 }

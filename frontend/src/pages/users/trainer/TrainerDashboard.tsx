@@ -2,8 +2,11 @@ import React from 'react'
 import Header from '../../../components/layout/Header'
 import Sidebar from '../../../components/layout/Sidebar'
 import Footer from '../../../components/layout/Footer'
+import { useAuth } from '../../../context/AuthContext'
 
 const TrainerDashboard: React.FC = () => {
+  // Username of the logged-in user (e.g. che.colaljo_mcctest or MCCTP-26-003)
+  const { user } = useAuth()
   return (
     <div className="flex min-h-screen flex-col bg-white text-slate-900">
       <Header />
@@ -37,7 +40,7 @@ const TrainerDashboard: React.FC = () => {
                     Trainer Portal
                   </p>
                   <p className="mt-2 text-2xl font-bold text-slate-900">
-                    MCCTP-26-002
+                    {user?.systemId || '—'}
                   </p>
                   <p className="mt-3 text-sm leading-6 text-slate-500">
                     Welcome to your MCCTEST Trainer Portal.

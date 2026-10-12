@@ -15,7 +15,7 @@ import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
 
 type AuthenticatedUser = { id: string; role: string };
-type AnnouncementListQuery = {
+export type AnnouncementListQuery = {
   page?: string;
   limit?: string;
   scope?: string;

@@ -66,11 +66,21 @@ export async function getAvailableBatches(traineeId?: string) {
         batchName: batch.batch_name,
         programId: batch.program_id,
         programName: batch.programs?.name || 'Unknown program',
+        programIsAccredited: Boolean(batch.programs?.is_accredited),
+        programPrefix: batch.programs?.control_number_prefix || '',
+        // TIME columns arrive as ISO strings on 1970-01-01, e.g. 1970-01-01T08:00:00.000Z
+        schedules: (batch.programs?.program_schedule || []).map((schedule: any) => ({
+          days: schedule.days || [],
+          startTime: String(schedule.start_time).slice(11, 16),
+          endTime: String(schedule.end_time).slice(11, 16),
+        })),
         startDate: batch.start_date,
         endDate: batch.end_date,
         capacity: batch.capacity,
         remainingCapacity: batch.remainingCapacity ?? (batch.capacity - (batch._count?.enrollments || 0)),
         batchStatus: batch.batch_status,
+        eligible: batch.eligible ?? true,
+        blockedReason: batch.blockedReason ?? null,
     }));
   } catch (error) {
     console.error('Error fetching available batches:', error);

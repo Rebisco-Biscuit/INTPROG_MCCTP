@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { getEnrollmentDetail, updateEnrollmentStatus } from '../../api/enrollments/enrollment.api';
 import EnrollmentStatusBadge from './EnrollmentStatusBadge';
 
@@ -16,11 +16,7 @@ const EnrollmentDetail: React.FC<EnrollmentDetailProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
-  useEffect(() => {
-    loadEnrollmentDetail();
-  }, [enrollmentId]);
-
-  const loadEnrollmentDetail = async () => {
+  const loadEnrollmentDetail = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await getEnrollmentDetail(enrollmentId);
@@ -32,7 +28,11 @@ const EnrollmentDetail: React.FC<EnrollmentDetailProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [enrollmentId]);
+
+  useEffect(() => {
+    void loadEnrollmentDetail();
+  }, [loadEnrollmentDetail]);
 
   const handleStatusChange = async (newStatus: string) => {
     try {
