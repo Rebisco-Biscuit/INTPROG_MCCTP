@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { StudentInformationModule } from '../../../student-information/student-information.module';
+import { TraineeInformationModule } from '../../trainee/trainee-information/trainee-information.module';
 import { AdminTraineesController } from './trainees.controller';
 
 @Module({
-  imports: [StudentInformationModule],
+  imports: [TraineeInformationModule],
   controllers: [AdminTraineesController],
 })
 export class AdminTraineesModule {}

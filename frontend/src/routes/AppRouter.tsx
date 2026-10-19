@@ -149,7 +149,7 @@ return ( <Routes>
     }
   />
 
-  {/* Student Information (MP-24): shared, read-only */}
+  {/* Trainee Information (MP-24): shared, read-only */}
   <Route
     path="/admin/trainees"
     element={

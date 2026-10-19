@@ -1,6 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
-import type { TraineeFilterKey, TraineeFilterOptions, TraineeFilters } from '../../types/student-information.type';
+import type { TraineeFilterKey, TraineeFilterOptions, TraineeFilters } from '../../types/trainee-information.type';
 import { enumLabel, formatDateOnly } from './format';
 import { INSURANCE_LABELS, PROGRAM_TYPE_LABELS, REQUIREMENT_LABELS } from './TraineeFilterPanel';
 

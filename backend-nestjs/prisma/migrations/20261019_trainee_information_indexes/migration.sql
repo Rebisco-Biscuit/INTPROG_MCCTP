@@ -1,4 +1,4 @@
--- Student Information module (MP-24): indexes for the trainee list search,
+-- Trainee Information module (MP-24): indexes for the trainee list search,
 -- filters and sorting.
 
 -- Trigram indexes let ILIKE '%term%' (partial, case-insensitive) searches on

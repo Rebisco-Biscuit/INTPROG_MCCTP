@@ -1,6 +1,6 @@
 import React from 'react';
-import { BATCH_STATUSES, ENROLLMENT_STATUSES, GENDERS } from '../../types/student-information.type';
-import type { TraineeFilterOptions, TraineeFilters } from '../../types/student-information.type';
+import { BATCH_STATUSES, ENROLLMENT_STATUSES, GENDERS } from '../../types/trainee-information.type';
+import type { TraineeFilterOptions, TraineeFilters } from '../../types/trainee-information.type';
 import { enumLabel } from './format';
 
 export const PROGRAM_TYPE_LABELS = { ACCREDITED: 'Accredited', NON_ACCREDITED: 'Non-accredited' } as const;

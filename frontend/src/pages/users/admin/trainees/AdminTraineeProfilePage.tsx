@@ -1,5 +1,5 @@
-import { StudentInformationProfilePage } from '../../../../components/student-information/StudentInformationPages';
+import { TraineeInformationProfilePage } from '../../../../components/trainee-information/TraineeInformationPages';
 
-const AdminTraineeProfilePage = () => <StudentInformationProfilePage role="admin" />;
+const AdminTraineeProfilePage = () => <TraineeInformationProfilePage role="admin" />;
 
 export default AdminTraineeProfilePage;

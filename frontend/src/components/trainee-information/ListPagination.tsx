@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { PAGE_SIZES } from '../../types/student-information.type';
+import { PAGE_SIZES } from '../../types/trainee-information.type';
 
 interface ListPaginationProps {
   page: number;

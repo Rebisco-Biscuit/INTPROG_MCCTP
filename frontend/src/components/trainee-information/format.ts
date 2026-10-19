@@ -1,4 +1,4 @@
-/** Display helpers for the Student Information module. */
+/** Display helpers for the Trainee Information module. */
 
 export function fullName(person: { firstName: string; middleName?: string; lastName: string }): string {
   return [person.firstName, person.middleName, person.lastName].filter(Boolean).join(' ') || 'Unnamed trainee';

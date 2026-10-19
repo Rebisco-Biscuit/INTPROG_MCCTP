@@ -10,8 +10,8 @@ import {
   REQUIREMENT_FILTERS,
   SORT_FIELDS,
   SORT_ORDERS,
-} from '../types/student-information.type';
-import type { TraineeFilters, TraineeListQuery } from '../types/student-information.type';
+} from '../types/trainee-information.type';
+import type { TraineeFilters, TraineeListQuery } from '../types/trainee-information.type';
 
 export const EMPTY_FILTERS: TraineeFilters = {
   search: '',

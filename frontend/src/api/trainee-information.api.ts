@@ -1,16 +1,16 @@
 import axios from 'axios';
 import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import type {
-  StudentInformationRole,
+  TraineeInformationRole,
   TraineeFilterOptions,
   TraineeListQuery,
   TraineeListResponse,
   TraineeProfile,
-} from '../types/student-information.type';
+} from '../types/trainee-information.type';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-function createClient(role: StudentInformationRole): AxiosInstance {
+function createClient(role: TraineeInformationRole): AxiosInstance {
   const client = axios.create({ baseURL: `${API_BASE_URL}/api/${role}/trainees` });
 
   client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -39,7 +39,7 @@ function createClient(role: StudentInformationRole): AxiosInstance {
   return client;
 }
 
-const clients: Record<StudentInformationRole, AxiosInstance> = {
+const clients: Record<TraineeInformationRole, AxiosInstance> = {
   admin: createClient('admin'),
   registrar: createClient('registrar'),
 };
@@ -52,7 +52,7 @@ function toParams(query: TraineeListQuery): Record<string, string | number> {
 }
 
 export async function listTrainees(
-  role: StudentInformationRole,
+  role: TraineeInformationRole,
   query: TraineeListQuery,
   signal?: AbortSignal,
 ): Promise<TraineeListResponse> {
@@ -61,7 +61,7 @@ export async function listTrainees(
 }
 
 export async function getTraineeFilterOptions(
-  role: StudentInformationRole,
+  role: TraineeInformationRole,
   signal?: AbortSignal,
 ): Promise<TraineeFilterOptions> {
   const response = await clients[role].get<TraineeFilterOptions>('/filter-options', { signal });
@@ -69,7 +69,7 @@ export async function getTraineeFilterOptions(
 }
 
 export async function getTraineeProfile(
-  role: StudentInformationRole,
+  role: TraineeInformationRole,
   id: string,
   signal?: AbortSignal,
 ): Promise<TraineeProfile> {

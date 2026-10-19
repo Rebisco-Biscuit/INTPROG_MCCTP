@@ -6,15 +6,15 @@ import {
   isRequestCancelled,
   listTrainees,
   requestErrorMessage,
-} from '../../api/student-information.api';
+} from '../../api/trainee-information.api';
 import { EMPTY_FILTERS, useTraineeListQuery } from '../../hooks/useTraineeListQuery';
 import type {
-  StudentInformationRole,
+  TraineeInformationRole,
   TraineeFilterKey,
   TraineeFilterOptions,
   TraineeListResponse,
   TraineeSortField,
-} from '../../types/student-information.type';
+} from '../../types/trainee-information.type';
 import ActiveFilterChips from './ActiveFilterChips';
 import ListPagination from './ListPagination';
 import TraineeFilterPanel from './TraineeFilterPanel';
@@ -31,12 +31,12 @@ export interface TraineeListLocationState {
 }
 
 interface TraineeListViewProps {
-  role: StudentInformationRole;
+  role: TraineeInformationRole;
   /** e.g. /admin/trainees; profiles open at `${basePath}/:id` */
   basePath: string;
 }
 
-/** Shared trainee list for every role that can view Student Information. */
+/** Shared trainee list for every role that can view Trainee Information. */
 const TraineeListView: React.FC<TraineeListViewProps> = ({ role, basePath }) => {
   const navigate = useNavigate();
   const location = useLocation();

@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '../generated/prisma/client';
+import { Prisma } from '../../../generated/prisma/client';
 import {
   batch_status_enum,
   enrollment_status_enum,
   gender_enum,
-} from '../generated/prisma/enums';
-import { PrismaService } from '../prisma/prisma.service';
+} from '../../../generated/prisma/enums';
+import { PrismaService } from '../../../prisma/prisma.service';
 import {
   TraineeListQueryDto,
   TraineeSortField,
@@ -15,7 +15,7 @@ import type {
   TraineeListResponse,
   TraineeListRow,
   TraineeProfile,
-} from './student-information.types';
+} from './trainee-information.types';
 
 /** Required documents counted as "complete" (same list the enrollment form uses). */
 const REQUIRED_DOCUMENTS = [
@@ -111,7 +111,7 @@ function toTimeOfDay(value: Date): string {
  * Controllers stay thin: they only add the role guard and route prefix.
  */
 @Injectable()
-export class StudentInformationService {
+export class TraineeInformationService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**

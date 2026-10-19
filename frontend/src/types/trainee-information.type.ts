@@ -1,9 +1,9 @@
 /**
- * Student Information (MP-24): read-only trainee records shared by the
+ * Trainee Information (MP-24): read-only trainee records shared by the
  * Admin and Registrar modules. Shapes match the backend responses.
  */
 
-export type StudentInformationRole = 'admin' | 'registrar';
+export type TraineeInformationRole = 'admin' | 'registrar';
 
 export type EnrollmentStatus = 'PENDING' | 'ENROLLED' | 'WITHDRAWN' | 'COMPLETED' | 'DROPPED';
 export type BatchStatus = 'OPEN' | 'ONGOING' | 'CLOSED' | 'CANCELLED';

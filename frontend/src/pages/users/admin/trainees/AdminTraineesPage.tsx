@@ -1,5 +1,5 @@
-import { StudentInformationListPage } from '../../../../components/student-information/StudentInformationPages';
+import { TraineeInformationListPage } from '../../../../components/trainee-information/TraineeInformationPages';
 
-const AdminTraineesPage = () => <StudentInformationListPage role="admin" />;
+const AdminTraineesPage = () => <TraineeInformationListPage role="admin" />;
 
 export default AdminTraineesPage;

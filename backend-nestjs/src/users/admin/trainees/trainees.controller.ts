@@ -11,10 +11,10 @@ import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/roles.decorator';
 import { Role } from '../../../common/enums/role.enum';
-import { TraineeListQueryDto } from '../../../student-information/dto/trainee-list-query.dto';
-import { StudentInformationService } from '../../../student-information/student-information.service';
+import { TraineeListQueryDto } from '../../trainee/trainee-information/dto/trainee-list-query.dto';
+import { TraineeInformationService } from '../../trainee/trainee-information/trainee-information.service';
 
-/** Read-only Student Information for admins (MP-24). */
+/** Read-only Trainee Information for admins (MP-24). */
 @Controller('admin/trainees')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Role.ADMIN)
@@ -22,24 +22,24 @@ import { StudentInformationService } from '../../../student-information/student-
 @Throttle({ default: { limit: 120, ttl: 60000 } })
 export class AdminTraineesController {
   constructor(
-    private readonly studentInformationService: StudentInformationService,
+    private readonly traineeInformationService: TraineeInformationService,
   ) {}
 
   /** GET /api/admin/trainees */
   @Get()
   findAll(@Query() query: TraineeListQueryDto) {
-    return this.studentInformationService.listTrainees(query);
+    return this.traineeInformationService.listTrainees(query);
   }
 
   /** GET /api/admin/trainees/filter-options */
   @Get('filter-options')
   getFilterOptions() {
-    return this.studentInformationService.getFilterOptions();
+    return this.traineeInformationService.getFilterOptions();
   }
 
   /** GET /api/admin/trainees/:id */
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.studentInformationService.getTraineeProfile(id);
+    return this.traineeInformationService.getTraineeProfile(id);
   }
 }

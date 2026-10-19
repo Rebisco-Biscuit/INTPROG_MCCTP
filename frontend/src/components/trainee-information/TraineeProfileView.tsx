@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, Pencil } from 'lucide-react';
-import { getTraineeProfile, isRequestCancelled, requestErrorMessage } from '../../api/student-information.api';
+import { getTraineeProfile, isRequestCancelled, requestErrorMessage } from '../../api/trainee-information.api';
 import EnrollmentStatusBadge from '../enrollment/EnrollmentStatusBadge';
 import { BatchStatusBadge } from '../registrar/batches/BatchStatusBadge';
-import type { StudentInformationRole, TraineeProfile, TraineeProfileEnrollment } from '../../types/student-information.type';
+import type { TraineeInformationRole, TraineeProfile, TraineeProfileEnrollment } from '../../types/trainee-information.type';
 import type { TraineeListLocationState } from './TraineeListView';
 import { enumLabel, formatDateOnly, formatTime, formatTimestamp, fullName, valueOrDash } from './format';
 
@@ -98,7 +98,7 @@ const EnrollmentCard: React.FC<{ enrollment: TraineeProfileEnrollment }> = ({ en
 };
 
 interface TraineeProfileViewProps {
-  role: StudentInformationRole;
+  role: TraineeInformationRole;
   traineeId: string;
   /** List route, e.g. /admin/trainees */
   basePath: string;

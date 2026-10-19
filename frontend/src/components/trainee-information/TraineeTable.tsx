@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import EnrollmentStatusBadge from '../enrollment/EnrollmentStatusBadge';
-import type { SortOrder, TraineeListRow, TraineeSortField } from '../../types/student-information.type';
+import type { SortOrder, TraineeListRow, TraineeSortField } from '../../types/trainee-information.type';
 import { formatTimestamp, listName, valueOrDash } from './format';
 
 interface TraineeTableProps {
