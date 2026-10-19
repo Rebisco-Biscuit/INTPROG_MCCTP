@@ -95,6 +95,8 @@ export interface TraineeProfileEnrollment {
   orNumber: string | null;
   requirementsSubmitted: number;
   requirementsTotal: number;
+  /** requirement_checklist.remarks for this enrollment */
+  requirementsRemarks: string | null;
   batch: {
     id: string;
     name: string;

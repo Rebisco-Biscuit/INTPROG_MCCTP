@@ -400,6 +400,7 @@ export class TraineeInformationService {
                 one_by_one_pic: true,
                 two_by_two_pic: true,
                 passport_size: true,
+                remarks: true,
               },
             },
             batch: {
@@ -509,6 +510,7 @@ export class TraineeInformationService {
             ? REQUIRED_DOCUMENTS.filter((column) => checklist[column]).length
             : 0,
           requirementsTotal: REQUIRED_DOCUMENTS.length,
+          requirementsRemarks: checklist?.remarks?.trim() || null,
           batch: {
             id: batch.id,
             name: batch.batch_name,

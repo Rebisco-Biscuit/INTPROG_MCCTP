@@ -90,6 +90,11 @@ const EnrollmentCard: React.FC<{ enrollment: TraineeProfileEnrollment }> = ({ en
                 </span>
               }
             />
+            <Field
+              label="Requirement Remarks"
+              wide
+              value={<span className="whitespace-pre-wrap">{valueOrDash(enrollment.requirementsRemarks)}</span>}
+            />
           </dl>
         </div>
       </div>
