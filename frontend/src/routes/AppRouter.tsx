@@ -21,6 +21,10 @@ import RegistrarAnnouncementsPage from '../pages/users/registrar/announcements/R
 import ProtectedRoute from '../components/auth/ProtectedRoute'
 import PublicOnlyRoute from '../components/auth/PublicOnlyRoute'
 import BatchManagement from '../pages/users/registrar/batches/BatchManagement'
+import AdminTraineesPage from '../pages/users/admin/trainees/AdminTraineesPage'
+import AdminTraineeProfilePage from '../pages/users/admin/trainees/AdminTraineeProfilePage'
+import RegistrarTraineesPage from '../pages/users/registrar/trainees/RegistrarTraineesPage'
+import RegistrarTraineeProfilePage from '../pages/users/registrar/trainees/RegistrarTraineeProfilePage'
 
 function AppRouter() {
 return ( <Routes>
@@ -141,6 +145,40 @@ return ( <Routes>
     element={
       <ProtectedRoute allowedRoles={['REGISTRAR']}>
         <RegistrarEnrollment />
+      </ProtectedRoute>
+    }
+  />
+
+  {/* Student Information (MP-24): shared, read-only */}
+  <Route
+    path="/admin/trainees"
+    element={
+      <ProtectedRoute allowedRoles={['ADMIN']}>
+        <AdminTraineesPage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/admin/trainees/:id"
+    element={
+      <ProtectedRoute allowedRoles={['ADMIN']}>
+        <AdminTraineeProfilePage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/registrar/trainees"
+    element={
+      <ProtectedRoute allowedRoles={['REGISTRAR']}>
+        <RegistrarTraineesPage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/registrar/trainees/:id"
+    element={
+      <ProtectedRoute allowedRoles={['REGISTRAR']}>
+        <RegistrarTraineeProfilePage />
       </ProtectedRoute>
     }
   />
