@@ -21,10 +21,10 @@ import RegistrarAnnouncementsPage from '../pages/users/registrar/announcements/R
 import ProtectedRoute from '../components/auth/ProtectedRoute'
 import PublicOnlyRoute from '../components/auth/PublicOnlyRoute'
 import BatchManagement from '../pages/users/registrar/batches/BatchManagement'
-import AdminTraineesPage from '../pages/users/admin/trainees/AdminTraineesPage'
-import AdminTraineeProfilePage from '../pages/users/admin/trainees/AdminTraineeProfilePage'
-import RegistrarTraineesPage from '../pages/users/registrar/trainees/RegistrarTraineesPage'
-import RegistrarTraineeProfilePage from '../pages/users/registrar/trainees/RegistrarTraineeProfilePage'
+import AdminTraineesPage from '../pages/users/admin/trainee-information/AdminTraineesPage'
+import AdminTraineeProfilePage from '../pages/users/admin/trainee-information/AdminTraineeProfilePage'
+import RegistrarTraineesPage from '../pages/users/registrar/trainee-information/RegistrarTraineesPage'
+import RegistrarTraineeProfilePage from '../pages/users/registrar/trainee-information/RegistrarTraineeProfilePage'
 
 function AppRouter() {
 return ( <Routes>
