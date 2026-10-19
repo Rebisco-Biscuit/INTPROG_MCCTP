@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 import LandingPage from '../pages/public/LandingPage'
@@ -17,6 +18,8 @@ import TraineeDashboard from '../pages/users/trainee/TraineeDashboard'
 import EncoderDashboard from '../pages/users/encoder/EncoderDashboard'
 
 import RegistrarAnnouncementsPage from '../pages/users/registrar/announcements/RegistrarAnnouncementsPage'
+const AdminPaymentsPage = lazy(() => import('../pages/users/admin/AdminPaymentsPage'))
+const RegistrarPaymentsPage = lazy(() => import('../pages/users/registrar/RegistrarPaymentsPage'))
 
 import ProtectedRoute from '../components/auth/ProtectedRoute'
 import PublicOnlyRoute from '../components/auth/PublicOnlyRoute'
@@ -65,6 +68,17 @@ return ( <Routes>
     element={
       <ProtectedRoute allowedRoles={['ADMIN']}>
         <AdminRecords />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/admin/payments"
+    element={
+      <ProtectedRoute allowedRoles={['ADMIN']}>
+        <Suspense fallback={<div className="p-6 text-sm text-slate-500">Loading payments...</div>}>
+          <AdminPaymentsPage />
+        </Suspense>
       </ProtectedRoute>
     }
   />
@@ -141,6 +155,17 @@ return ( <Routes>
     element={
       <ProtectedRoute allowedRoles={['REGISTRAR']}>
         <RegistrarEnrollment />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/registrar/payments"
+    element={
+      <ProtectedRoute allowedRoles={['REGISTRAR']}>
+        <Suspense fallback={<div className="p-6 text-sm text-slate-500">Loading payments...</div>}>
+          <RegistrarPaymentsPage />
+        </Suspense>
       </ProtectedRoute>
     }
   />
