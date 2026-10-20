@@ -389,6 +389,11 @@ const sidebarConfig: Record<
         title: 'Records',
         items: [
           {
+            label: 'Trainees',
+            path: '/registrar/trainees',
+            icon: 'fa-solid fa-users',
+          },
+          {
             label: 'Trainee Records',
             path: '/registrar/records',
             icon: 'fa-solid fa-folder-open',
