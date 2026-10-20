@@ -426,7 +426,7 @@ model sessions {
 
 model trainee {
   id                    String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  users_id              String?                @unique @db.Uuid
+  users_id              String?                @unique(map: "trainee_users_id_key") @db.Uuid
   contact_number        String                 @db.VarChar(15)
   street_address        String                 @db.VarChar(100)
   barangay              String                 @db.VarChar(100)
@@ -448,6 +448,8 @@ model trainee {
   insurance_coverage    insurance_coverage[]
   users                 users?                 @relation(fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   trainee_beneficiaries trainee_beneficiaries?
+
+  @@index([contact_number(ops: raw("gin_trgm_ops"))], map: "idx_trainee_contact_number_trgm", type: Gin)
 }
 
 model trainee_beneficiaries {
@@ -546,18 +548,11 @@ model users {
   training_session                    training_session[]
   user_role                           user_role[]
   withdrawal_request                  withdrawal_request[]
-}
+l_request                  withdrawal_request[]
 
-model withdrawal_request {
-  withdrawal_request_id String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  enrollment_id         String              @db.Uuid
-  requested_reason      String
-  date_requested        DateTime            @db.Date
-  flagged_by_system     Boolean             @default(false)
-  request_status        request_status_enum @default(PENDING)
-  surrendered_id        Boolean             @default(false)
-  reviewed_by           String?             @db.Uuid
-  date_reviewed         DateTime?           @db.Date
+  @@index([first_name(ops: raw("gin_trgm_ops"))], map: "idx_users_first_name_trgm", type: Gin)
+  @@index([last_name(ops: raw("gin_trgm_ops"))], map: "idx_users_last_name_trgm", type: Gin)
+b.Date
   remarks               String?
   enrollments           enrollments         @relation(fields: [enrollment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users                 users?              @relation(fields: [reviewed_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
