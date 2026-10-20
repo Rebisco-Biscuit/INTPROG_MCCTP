@@ -11,8 +11,8 @@ import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/roles.decorator';
 import { Role } from '../../../common/enums/role.enum';
-import { TraineeListQueryDto } from '../../trainee/trainee-information/dto/trainee-list-query.dto';
-import { TraineeInformationService } from '../../trainee/trainee-information/trainee-information.service';
+import { TraineeListQueryDto } from '../../../trainee-information/dto/trainee-list-query.dto';
+import { TraineeInformationService } from '../../../trainee-information/trainee-information.service';
 
 /** Read-only Trainee Information for admins (MP-24). */
 @Controller('admin/trainees')

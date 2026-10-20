@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '../../../generated/prisma/client';
+import { Prisma } from '../generated/prisma/client';
 import {
   batch_status_enum,
   enrollment_status_enum,
   gender_enum,
-} from '../../../generated/prisma/enums';
-import { PrismaService } from '../../../prisma/prisma.service';
+} from '../generated/prisma/enums';
+import { PrismaService } from '../prisma/prisma.service';
 import {
   TraineeListQueryDto,
   TraineeSortField,

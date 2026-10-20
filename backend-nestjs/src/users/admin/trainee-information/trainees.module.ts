@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TraineeInformationModule } from '../../trainee/trainee-information/trainee-information.module';
+import { TraineeInformationModule } from '../../../trainee-information/trainee-information.module';
 import { AdminTraineesController } from './trainees.controller';
 
 @Module({

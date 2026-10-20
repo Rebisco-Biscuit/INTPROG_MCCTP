@@ -16,7 +16,7 @@ import {
   batch_status_enum,
   enrollment_status_enum,
   gender_enum,
-} from '../../../../generated/prisma/enums';
+} from '../../generated/prisma/enums';
 
 export const TRAINEE_SORT_FIELDS = ['name', 'enrolledAt', 'idCard'] as const;
 export type TraineeSortField = (typeof TRAINEE_SORT_FIELDS)[number];

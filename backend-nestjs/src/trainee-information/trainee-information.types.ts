@@ -8,7 +8,7 @@ import type {
   gender_enum,
   highest_education_enum,
   size_enum,
-} from '../../../generated/prisma/enums';
+} from '../generated/prisma/enums';
 
 /** Account fields safe to show staff (never password_hash or auth state). */
 export interface TraineeName {

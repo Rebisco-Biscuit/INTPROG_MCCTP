@@ -5,7 +5,7 @@ import { EnrollmentsController } from './enrollments/enrollments.controller';
 import { RegistrarTraineesController } from './trainees/trainees.controller';
 import { EnrollmentsModule } from '../../enrollments/enrollments.module';
 import { PrismaModule } from '../../prisma/prisma.module';
-import { TraineeInformationModule } from '../trainee/trainee-information/trainee-information.module';
+import { TraineeInformationModule } from '../../trainee-information/trainee-information.module';
 
 @Module({
   imports: [PrismaModule, EnrollmentsModule, TraineeInformationModule],
