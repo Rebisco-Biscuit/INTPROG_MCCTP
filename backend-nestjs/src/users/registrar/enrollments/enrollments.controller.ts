@@ -7,6 +7,7 @@ import {
   Query,
   Param,
   Body,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
@@ -41,7 +42,10 @@ export class EnrollmentsController {
   }
 
   @Get('enrollments/available/batches')
-  async getAvailableBatches(@Query('traineeId') traineeId?: string) {
+  async getAvailableBatches(
+    @Query('traineeId', new ParseUUIDPipe({ optional: true }))
+    traineeId?: string,
+  ) {
     return this.enrollmentsService.getAvailableBatches(traineeId);
   }
 
@@ -56,7 +60,7 @@ export class EnrollmentsController {
   }
 
   @Get('enrollments/:id')
-  async getEnrollmentDetail(@Param('id') enrollmentId: string) {
+  async getEnrollmentDetail(@Param('id', ParseUUIDPipe) enrollmentId: string) {
     return this.enrollmentsService.getEnrollmentDetail(enrollmentId);
   }
 
@@ -70,7 +74,7 @@ export class EnrollmentsController {
 
   @Patch('enrollments/:id/status')
   async updateEnrollmentStatus(
-    @Param('id') enrollmentId: string,
+    @Param('id', ParseUUIDPipe) enrollmentId: string,
     @Body() updateDto: UpdateEnrollmentStatusDto,
   ) {
     return this.enrollmentsService.updateEnrollmentStatus(
@@ -81,7 +85,7 @@ export class EnrollmentsController {
 
   @Patch('enrollments/:id/requirements')
   async updateRequirementChecklist(
-    @Param('id') enrollmentId: string,
+    @Param('id', ParseUUIDPipe) enrollmentId: string,
     @Body() checklist: RequirementChecklistDto,
     @CurrentUser() currentUser: AuthenticatedUser,
   ) {
