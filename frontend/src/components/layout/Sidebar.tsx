@@ -297,6 +297,11 @@ const sidebarConfig: Record<
             path: '/encoder/dashboard',
             icon: 'fa-solid fa-gauge-high',
           },
+          {
+            label: 'Announcements',
+            path: '/encoder/announcements',
+            icon: 'fa-solid fa-bullhorn',
+          },
         ],
       },
 

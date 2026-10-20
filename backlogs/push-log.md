@@ -27,4 +27,5 @@
 
 | Ticket | Feature | Branch | Assignee | Status |
 |--------|---------|--------|----------|--------|
+| MP-37 | Encoder Announcement Module + Dashboard Widgets (Trainer, Trainee) | `mp-37-encoder-announcements` | Chelsea Cllj | In Progress |
 | MP-25 | Payments Module | — | Vince Jon Gonzalez | Not Started |
