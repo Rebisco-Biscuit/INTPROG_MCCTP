@@ -2,5 +2,4 @@
 .vscode/
 .DS_Store
 Thumbs.db
-# Payments implementation notes
-PAYMENTS_IMPLEMENTATION_NOTES.md
+Payment_Task.md
