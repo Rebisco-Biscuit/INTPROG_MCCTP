@@ -20,6 +20,27 @@
 | 2026-10-20 | MP-24 | Trainee Information — final (shared module move, backlogs) | PR #17 `dev` → PR #18 `staging` | Sprint 3 |
 | 2026-10-20 | — | Backlogs restructure (consistent format + structured test cases) | PR #19, PR #20 `backlogs-restructure` | — |
 | 2026-10-20 | MP-33, MP-16 | Admin Enrollment Module + registrar UUID validation | PR #21 `adminEnrollment` → PR #22 `dev` → PR #23 `staging` | Sprint 3 |
+| 2026-10-20 | — | Update push log — add PRs #19–#23, move MP-33 to merged | PR #24 `update-push-log` | — |
+| 2026-10-20 | TECH-01 | Technical debt backlog for e2e Jest ESM config | PR #25 `backlog-technical-debt` | — |
+| 2026-10-20 | MP-37 | Encoder Announcements Module + Dashboard Widgets (Trainer, Trainee, Encoder) | PR #26 `mp-37-encoder-announcements` | Sprint 3 |
+| 2026-10-20 | — | Dev sync merge (resolve conflicts in acceptance.md and push-log.md) | PR #27 `merge-dev-sync` | — |
+
+---
+
+## Announcements — Role Permissions (Admin, Registrar, Encoder)
+
+| Action | Admin | Registrar | Encoder |
+|--------|-------|-----------|---------|
+| Post Global | Yes | Yes | Yes |
+| Post Program | Yes | Yes | Yes |
+| Post Batch | Yes | Yes | Yes |
+| View all (paginated + filters) | Yes | Yes | Yes |
+| Edit own announcements | Yes | Yes | Yes |
+| Edit others' announcements | Yes | No | No |
+| Delete own announcements | Yes | Yes | Yes |
+| Delete others' announcements | No | No | No |
+
+**Note:** Admin page relies on component defaults (no explicit props); Registrar and Encoder pages pass permissions explicitly. Behavior is identical.
 
 ---
 

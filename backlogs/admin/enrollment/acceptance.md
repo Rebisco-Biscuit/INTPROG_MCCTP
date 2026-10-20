@@ -4,10 +4,11 @@
 |-------|-------|
 | **Jira** | MP-33 |
 | **Type** | Feature |
-| **Status** | In Progress |
+| **Status** | Done |
 | **Assignee** | Chelsea Cllj |
 | **Sprint** | MP Sprint 3 |
-| **Branch** | `adminEnrollment` (stashed) |
+| **Merged** | 2026-10-20 (PR #21) |
+| **Branch** | `adminEnrollment` |
 | **Route** | `/admin/enrollments` |
 
 ---
@@ -365,3 +366,18 @@
 ---
 
 ## Summary: 18 PASS, 2 PARTIAL, 7 FAIL
+
+### Unit Test Coverage (2026-10-20)
+
+Backend service and controller unit tests verified:
+- All 7 route handlers delegate correctly with ADMIN role guard
+- `searchTrainees` — empty/short queries, trimmed search, active insurance flag
+- `getAvailableBatches` — eligibility, full batch blocking, program rule conflicts, past batch blocking
+- `getPrograms` — active programs with correct ordering
+- `createEnrollment` — new trainee, re-enrollment, date validation, batch not found/closed/full, duplicate contact, same-batch conflict, payment with/without insurance, uniform stock, ID card format, serialization retry, unique violation handling
+- `getEnrollments` — pagination, search/program/status/date filters, UUID search, defaults
+- `getEnrollmentDetail` — success and not-found (404)
+- `updateEnrollmentStatus` — status change with appended remarks, exit reason, reactivation validation, serialization conflict
+- `updateRequirementChecklist` — upsert and not-found
+
+**Result: 56/56 tests passed** (44 service + 12 controller)
