@@ -10,6 +10,11 @@ import RegistrarDashboard from '../pages/users/registrar/RegistrarDashboard'
 import RegistrarEnrollment from '../pages/users/registrar/RegistrarEnrollment'
 import AdminBatchConfiguration from '../pages/users/admin/batches/AdminBatchConfiguration'
 import AdminAnnouncementsPage from '../pages/users/admin/announcements/AdminAnnouncementsPage'
+import AdminEnrollmentPage from '../pages/users/admin/enrollment/AdminEnrollmentPage'
+import AdminPaymentsPage from '../pages/users/admin/payments/AdminPaymentsPage'
+import AdminInventoryPage from '../pages/users/admin/inventory/AdminInventoryPage'
+import AdminReportsPage from '../pages/users/admin/reports/AdminReportsPage'
+import AdminImportDataPage from '../pages/users/admin/import-data/AdminImportDataPage'
 
 import TrainerDashboard from '../pages/users/trainer/TrainerDashboard'
 
@@ -116,6 +121,51 @@ return ( <Routes>
   element={
     <ProtectedRoute allowedRoles={['ADMIN']}>
       <AdminBatchConfiguration />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/enrollment"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <AdminEnrollmentPage />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/payments"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <AdminPaymentsPage />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/inventory"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <AdminInventoryPage />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/reports"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <AdminReportsPage />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/import-data"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <AdminImportDataPage />
     </ProtectedRoute>
   }
 />
