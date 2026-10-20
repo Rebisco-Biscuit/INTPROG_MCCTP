@@ -26,6 +26,12 @@ const ACTIVE_ENROLLMENT_STATUSES: enrollment_status_enum[] = [
   'ENROLLED',
 ];
 
+/** Statuses that mean the trainee left the batch early */
+const EXIT_ENROLLMENT_STATUSES: enrollment_status_enum[] = [
+  'WITHDRAWN',
+  'DROPPED',
+];
+
 /** Batch fields needed to apply the program rules. */
 const programRuleBatchSelect = {
   start_date: true,
@@ -1133,29 +1139,135 @@ export class EnrollmentsService {
     return enrollment;
   }
 
+  /**
+   * Changes an enrollment's status. Putting a withdrawn, dropped or completed
+   * enrollment back to PENDING/ENROLLED is checked like a new enrollment
+   * (batch still running, a free slot, program rules), so the status
+   * dropdown cannot be used to get around those rules.
+   */
   async updateEnrollmentStatus(
     enrollmentId: string,
     updateDto: UpdateEnrollmentStatusDto,
   ) {
-    const enrollment = await this.prisma.enrollments.findUnique({
-      where: { id: enrollmentId },
-    });
+    const nextStatus = updateDto.status;
 
-    if (!enrollment) {
-      throw new NotFoundException('Enrollment not found.');
+    try {
+      return await this.prisma.$transaction(
+        async (tx) => {
+          const enrollment = await tx.enrollments.findUnique({
+            where: { id: enrollmentId },
+            select: {
+              id: true,
+              trainee_id: true,
+              batch_id: true,
+              enrollment_status: true,
+              remarks: true,
+            },
+          });
+
+          if (!enrollment) {
+            throw new NotFoundException('Enrollment not found.');
+          }
+
+          const isReactivation =
+            ACTIVE_ENROLLMENT_STATUSES.includes(nextStatus) &&
+            !ACTIVE_ENROLLMENT_STATUSES.includes(enrollment.enrollment_status);
+          if (isReactivation) {
+            await this.validateReactivation(tx, enrollment);
+          }
+
+          const exitReason = updateDto.exitReason?.trim();
+          const remarks = updateDto.remarks?.trim();
+
+          return tx.enrollments.update({
+            where: { id: enrollmentId },
+            data: {
+              enrollment_status: nextStatus,
+              // Added to the existing remarks, never replacing them
+              remarks: remarks
+                ? [enrollment.remarks, remarks].filter(Boolean).join('\n\n')
+                : enrollment.remarks,
+              // Keep the reason for leaving; clear it when the trainee returns
+              ...(EXIT_ENROLLMENT_STATUSES.includes(nextStatus) && exitReason
+                ? { exit_reason: exitReason }
+                : {}),
+              ...(isReactivation ? { exit_reason: null } : {}),
+            },
+          });
+        },
+        { isolationLevel: 'Serializable', maxWait: 10000, timeout: 15000 },
+      );
+    } catch (error) {
+      // P2034: another change to the same batch was saved at the same moment
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        error.code === 'P2034'
+      ) {
+        throw new ConflictException(
+          'Another change to this batch was saved at the same time. Please try again.',
+        );
+      }
+      throw error;
     }
+  }
 
-    return this.prisma.enrollments.update({
-      where: { id: enrollmentId },
-      data: {
-        enrollment_status: updateDto.status,
-        remarks: updateDto.remarks?.trim()
-          ? [enrollment.remarks, updateDto.remarks.trim()]
-              .filter(Boolean)
-              .join('\n\n')
-          : enrollment.remarks,
+  /**
+   * Rules for returning an inactive enrollment to PENDING/ENROLLED: the batch
+   * must not be closed or cancelled, must have a free slot, and the trainee's
+   * other active enrollments must allow it (same rules as enrolling).
+   */
+  private async validateReactivation(
+    tx: Parameters<Parameters<typeof this.prisma.$transaction>[0]>[0],
+    enrollment: { id: string; trainee_id: string; batch_id: string },
+  ) {
+    const batch = await tx.batch.findUnique({
+      where: { id: enrollment.batch_id },
+      select: {
+        ...programRuleBatchSelect,
+        batch_status: true,
+        capacity: true,
+        _count: {
+          select: {
+            enrollments: {
+              where: { enrollment_status: { in: ACTIVE_ENROLLMENT_STATUSES } },
+            },
+          },
+        },
       },
     });
+
+    if (!batch) {
+      throw new NotFoundException('Batch not found.');
+    }
+
+    if (batch.batch_status === 'CLOSED' || batch.batch_status === 'CANCELLED') {
+      throw new BadRequestException(
+        `This batch is ${batch.batch_status.toLowerCase()}, so the trainee cannot be put back into it.`,
+      );
+    }
+
+    if (batch._count.enrollments >= batch.capacity) {
+      throw new BadRequestException(
+        'This batch is already full, so the trainee cannot be put back into it.',
+      );
+    }
+
+    const otherActiveEnrollments = await tx.enrollments.findMany({
+      where: {
+        trainee_id: enrollment.trainee_id,
+        id: { not: enrollment.id },
+        enrollment_status: { in: ACTIVE_ENROLLMENT_STATUSES },
+      },
+      select: { batch: { select: programRuleBatchSelect } },
+    });
+
+    const conflict = findProgramRuleConflict(
+      otherActiveEnrollments.map((e) => e.batch),
+      batch,
+    );
+    if (conflict) throw new ConflictException(conflict);
   }
 
   /**

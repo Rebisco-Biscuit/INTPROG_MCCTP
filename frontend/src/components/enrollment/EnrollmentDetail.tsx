@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { CircleCheck, CircleX } from 'lucide-react';
-import { getEnrollmentDetail, updateEnrollmentStatus, updateRequirementChecklist } from '../../api/enrollments/enrollment.api';
+import { useEnrollmentApi } from '../../context/EnrollmentApiContext';
 import EnrollmentStatusBadge from './EnrollmentStatusBadge';
 
 /** Required documents: database column, API field, and label */
@@ -24,21 +24,30 @@ const tagClass = 'text-[10px] font-semibold uppercase tracking-wider';
 interface EnrollmentDetailProps {
   enrollmentId: string;
   onClose: () => void;
+  onUpdated?: () => void;
 }
 
 const EnrollmentDetail: React.FC<EnrollmentDetailProps> = ({
   enrollmentId,
   onClose,
+  onUpdated,
 }) => {
-  const [enrollment, setEnrollment] = useState<any>(null);
+  // API calls for this page's role (registrar or admin routes)
+  const { getEnrollmentDetail, updateEnrollmentStatus, updateRequirementChecklist } = useEnrollmentApi();  const [enrollment, setEnrollment] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
-  // Submitted documents editing (registrar)
+  // Submitted documents editing
   const [isEditingDocuments, setIsEditingDocuments] = useState(false);
   const [draftDocuments, setDraftDocuments] = useState<Record<DocumentKey, boolean> | null>(null);
   const [isSavingDocuments, setIsSavingDocuments] = useState(false);
   const [documentsError, setDocumentsError] = useState<string | null>(null);
+  // Toast notification
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   const savedDocuments = (): Record<DocumentKey, boolean> =>
     Object.fromEntries(
@@ -69,9 +78,13 @@ const EnrollmentDetail: React.FC<EnrollmentDetailProps> = ({
       setEnrollment((prev: any) => ({ ...prev, requirement_checklist: saved }));
       setIsEditingDocuments(false);
       setDraftDocuments(null);
+      showToast('Documents updated successfully');
+      onUpdated?.();
     } catch (err) {
       console.error('Error saving submitted documents:', err);
-      setDocumentsError((err as any)?.response?.data?.message || 'Failed to save submitted documents');
+      const msg = (err as any)?.response?.data?.message || 'Failed to save submitted documents';
+      setDocumentsError(msg);
+      showToast(msg, 'error');
     } finally {
       setIsSavingDocuments(false);
     }
@@ -89,7 +102,7 @@ const EnrollmentDetail: React.FC<EnrollmentDetailProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [enrollmentId]);
+  }, [enrollmentId, getEnrollmentDetail]);
 
   useEffect(() => {
     void loadEnrollmentDetail();
@@ -99,7 +112,6 @@ const EnrollmentDetail: React.FC<EnrollmentDetailProps> = ({
     try {
       setIsUpdatingStatus(true);
       await updateEnrollmentStatus(enrollmentId, newStatus);
-      // Update both the selected enrollment and its card in the program list
       setEnrollment((prev: any) => ({
         ...prev,
         enrollment_status: newStatus,
@@ -111,9 +123,13 @@ const EnrollmentDetail: React.FC<EnrollmentDetailProps> = ({
         },
       }));
       setError(null);
+      showToast('Enrollment status updated successfully');
+      onUpdated?.();
     } catch (err) {
       console.error('Error updating status:', err);
-      setError('Failed to update enrollment status');
+      const msg = (err as any)?.response?.data?.message || 'Failed to update enrollment status';
+      setError(msg);
+      showToast(msg, 'error');
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -238,8 +254,49 @@ const EnrollmentDetail: React.FC<EnrollmentDetailProps> = ({
                   {enrollment.trainee?.municipality}, {enrollment.trainee?.province}
                 </p>
               </div>
+              {enrollment.trainee?.users?.system_id && (
+                <div>
+                  <p className="font-medium text-slate-600">Portal Username</p>
+                  <p className="font-mono text-slate-900">{enrollment.trainee.users.system_id}</p>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* Beneficiary */}
+          {enrollment.trainee?.trainee_beneficiaries && (
+            <div className="border border-slate-200 rounded-lg p-4">
+              <h3 className="font-semibold text-slate-900 mb-4">Beneficiary</h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="font-medium text-slate-600">Name</p>
+                  <p className="text-slate-900">
+                    {[
+                      enrollment.trainee.trainee_beneficiaries.first_name,
+                      enrollment.trainee.trainee_beneficiaries.middle_name,
+                      enrollment.trainee.trainee_beneficiaries.last_name,
+                    ].filter(Boolean).join(' ')}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-medium text-slate-600">Relationship</p>
+                  <p className="text-slate-900">{enrollment.trainee.trainee_beneficiaries.relationship}</p>
+                </div>
+                <div>
+                  <p className="font-medium text-slate-600">Contact Number</p>
+                  <p className="text-slate-900">{enrollment.trainee.trainee_beneficiaries.contact_number}</p>
+                </div>
+                <div>
+                  <p className="font-medium text-slate-600">ID Number</p>
+                  <p className="text-slate-900">{enrollment.trainee.trainee_beneficiaries.id_number || '—'}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="font-medium text-slate-600">Address</p>
+                  <p className="text-slate-900">{enrollment.trainee.trainee_beneficiaries.address}</p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* One card per program the trainee is enrolled in */}
           <div className="space-y-3">
@@ -321,6 +378,15 @@ const EnrollmentDetail: React.FC<EnrollmentDetailProps> = ({
                     <span className={`${tagClass} ${allSubmitted ? 'text-green-700' : 'text-slate-400'}`}>
                       {submittedCount} / {REQUIRED_DOCUMENTS.length} submitted
                     </span>
+                    {(enrollment.requirement_checklist?.users || enrollment.requirement_checklist?.checked_at) && (
+                      <span className="text-xs text-slate-400">
+                        {enrollment.requirement_checklist.users
+                          ? `Checked by ${enrollment.requirement_checklist.users.first_name} ${enrollment.requirement_checklist.users.last_name}`
+                          : 'Checked'}
+                        {enrollment.requirement_checklist.checked_at &&
+                          ` on ${new Date(enrollment.requirement_checklist.checked_at).toLocaleDateString()}`}
+                      </span>
+                    )}
                   </div>
                   {isEditingDocuments ? (
                     <div className="flex gap-4">
@@ -403,6 +469,17 @@ const EnrollmentDetail: React.FC<EnrollmentDetailProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Toast */}
+      {toast && (
+        <div
+          className={`fixed bottom-6 right-6 z-[60] flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium shadow-lg ${
+            toast.type === 'success' ? 'bg-gray-900 text-white' : 'bg-red-600 text-white'
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
     </div>
   );
 };

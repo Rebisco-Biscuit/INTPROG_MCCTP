@@ -23,6 +23,12 @@ export class UpdateEnrollmentStatusDto {
   @IsString()
   @MaxLength(2000)
   remarks?: string;
+
+  /** Why the trainee left; saved when the status is WITHDRAWN or DROPPED */
+  @IsOptional()
+  @IsString()
+  @MaxLength(2000)
+  exitReason?: string;
 }
 
 /**
@@ -31,6 +37,7 @@ export class UpdateEnrollmentStatusDto {
 export class EnrollmentFilterDto {
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   search?: string;
 
   @IsOptional()
