@@ -23,6 +23,23 @@
 
 ---
 
+## Announcements — Role Permissions (Admin, Registrar, Encoder)
+
+| Action | Admin | Registrar | Encoder |
+|--------|-------|-----------|---------|
+| Post Global | Yes | Yes | Yes |
+| Post Program | Yes | Yes | Yes |
+| Post Batch | Yes | Yes | Yes |
+| View all (paginated + filters) | Yes | Yes | Yes |
+| Edit own announcements | Yes | Yes | Yes |
+| Edit others' announcements | Yes | No | No |
+| Delete own announcements | Yes | Yes | Yes |
+| Delete others' announcements | No | No | No |
+
+**Note:** Admin page relies on component defaults (no explicit props); Registrar and Encoder pages pass permissions explicitly. Behavior is identical.
+
+---
+
 ## In Progress
 
 | Ticket | Feature | Branch | Assignee | Status |
