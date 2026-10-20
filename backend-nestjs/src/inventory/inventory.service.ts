@@ -54,7 +54,7 @@ export class InventoryService {
     }
 
     return size as size_enum;
-  }
+  }   
 
   /**
    * GET /inventory

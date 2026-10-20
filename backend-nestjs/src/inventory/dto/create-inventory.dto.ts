@@ -1,5 +1,7 @@
+
 import { Type } from 'class-transformer';
 import {
+  IsEnum,
   IsInt,
   IsString,
   IsUUID,
@@ -11,18 +13,18 @@ import { size_enum } from '../../generated/prisma/client';
 
 export class CreateInventoryDto {
   @IsUUID()
-  program_id: string;
+  program_id!: string;
 
   @IsString()
   @MaxLength(100)
-  item_name: string;
+  item_name!: string;
 
-  // Enum validation is added at the API boundary in the controller/service.
-  sizes: size_enum;
+  @IsEnum(size_enum)
+  sizes!: size_enum;
 
   @Type(() => Number)
   @IsInt()
   @Min(0)
   @Max(1000000)
-  quantity: number;
+  quantity!: number;
 }
