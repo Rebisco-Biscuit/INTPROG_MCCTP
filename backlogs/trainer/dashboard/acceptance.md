@@ -36,4 +36,41 @@
 
 ---
 
+## Test Cases
+
+### TC-01: Trainer login redirects to dashboard
+- **AC:** #1
+- **Priority:** Critical
+- **Precondition:** Trainer account exists
+- **Steps:**
+  1. Log in with trainer credentials
+- **Expected:** Redirected to `/trainer/dashboard`
+
+### TC-02: Dashboard renders without errors
+- **AC:** #2
+- **Priority:** Critical
+- **Precondition:** Logged in as trainer
+- **Steps:**
+  1. Navigate to `/trainer/dashboard`
+  2. Check browser console
+- **Expected:** Page loads with no errors
+
+### TC-03: Non-trainer blocked
+- **AC:** #3
+- **Priority:** Critical
+- **Precondition:** Logged in as admin
+- **Steps:**
+  1. Navigate to `/trainer/dashboard` via URL bar
+- **Expected:** Redirected to `/403`
+
+### TC-04: Sidebar links visible
+- **AC:** #4
+- **Priority:** High
+- **Precondition:** Logged in as trainer, on dashboard
+- **Steps:**
+  1. Inspect sidebar navigation
+- **Expected:** Training and Records sections visible
+
+---
+
 ## Summary: 4/4 PASS — 7 pages NOT STARTED

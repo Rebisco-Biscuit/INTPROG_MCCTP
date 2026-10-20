@@ -27,4 +27,41 @@
 
 ---
 
+## Test Cases
+
+### TC-01: Admin login redirects to dashboard
+- **AC:** #1
+- **Priority:** Critical
+- **Precondition:** Admin account exists
+- **Steps:**
+  1. Log in with admin credentials
+- **Expected:** Redirected to `/admin/dashboard`
+
+### TC-02: Dashboard renders without errors
+- **AC:** #2
+- **Priority:** Critical
+- **Precondition:** Logged in as admin
+- **Steps:**
+  1. Navigate to `/admin/dashboard`
+  2. Check browser console for errors
+- **Expected:** Page loads with no console errors or blank screens
+
+### TC-03: Non-admin blocked from admin dashboard
+- **AC:** #3
+- **Priority:** Critical
+- **Precondition:** Logged in as registrar (or trainer/trainee/encoder)
+- **Steps:**
+  1. Navigate to `/admin/dashboard` via URL bar
+- **Expected:** Redirected to `/403`
+
+### TC-04: Sidebar navigation links visible
+- **AC:** #4
+- **Priority:** High
+- **Precondition:** Logged in as admin, on dashboard
+- **Steps:**
+  1. Inspect the sidebar
+- **Expected:** All admin navigation links visible (Programs, Staff Accounts, Batches, Enrollments, Payments, Announcements, Trainee Information)
+
+---
+
 ## Summary: 4/4 PASS

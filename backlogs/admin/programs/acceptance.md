@@ -43,4 +43,70 @@
 
 ---
 
+## Test Cases
+
+### TC-01: View programs list with filters
+- **AC:** #1
+- **Priority:** Critical
+- **Precondition:** Logged in as admin; at least 2 programs exist (1 active, 1 archived)
+- **Steps:**
+  1. Navigate to `/admin/programs`
+  2. Verify the table loads with all programs
+  3. Filter by status = "Active"
+  4. Filter by sector
+  5. Type a search query
+- **Expected:** Table shows matching programs; filters combine correctly; pagination works
+
+### TC-02: Create a new program
+- **AC:** #2
+- **Priority:** Critical
+- **Precondition:** Logged in as admin, on programs page
+- **Steps:**
+  1. Click "Create Program" button
+  2. Leave required fields blank and attempt to submit
+  3. Fill in all required fields (name, sector, description)
+  4. Click Save
+- **Expected:** Step 2 shows validation errors; step 4 creates program and shows it in the table
+
+### TC-03: Edit an existing program
+- **AC:** #3
+- **Priority:** High
+- **Precondition:** At least 1 program exists
+- **Steps:**
+  1. Click the Edit action on a program row
+  2. Verify modal pre-fills existing values
+  3. Modify the program name
+  4. Click Save
+- **Expected:** Modal shows current data; changes saved and reflected in the table
+
+### TC-04: Archive and restore a program
+- **AC:** #4
+- **Priority:** High
+- **Precondition:** At least 1 active program exists
+- **Steps:**
+  1. Click Archive on an active program
+  2. Verify status changes to "Archived" immediately
+  3. Click Restore on the archived program
+  4. Verify status changes back to "Active"
+- **Expected:** Status toggles correctly without page reload
+
+### TC-05: Empty state when no programs
+- **AC:** #5
+- **Priority:** Medium
+- **Precondition:** No programs in database (or all filtered out)
+- **Steps:**
+  1. Navigate to `/admin/programs` with no data
+- **Expected:** Empty state component displayed (not a blank page)
+
+### TC-06: Non-admin access denied
+- **AC:** #6
+- **Priority:** Critical
+- **Precondition:** Logged in as registrar
+- **Steps:**
+  1. Call `GET /admin/programs` via API
+  2. Navigate to `/admin/programs` via URL bar
+- **Expected:** API returns 403; frontend redirects to `/403`
+
+---
+
 ## Summary: 6/6 PASS
