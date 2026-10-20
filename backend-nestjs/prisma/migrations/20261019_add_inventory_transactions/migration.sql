@@ -31,7 +31,8 @@ CREATE INDEX "idx_inventory_program_size"
 ON "inventory" ("program_id", "sizes");
 
 -- Merge duplicate inventory rows before adding the unique constraint.
--- Keep the oldest row, combine quantities, and repoint checklist references.
+-- Keep a deterministic row, combine quantities, and repoint checklist references.
+
 WITH ranked_inventory AS (
     SELECT
         "id",
@@ -42,26 +43,23 @@ WITH ranked_inventory AS (
         ROW_NUMBER() OVER (
             PARTITION BY "program_id", "item_name", "sizes"
             ORDER BY "id"
-        ) AS row_num
+        ) AS row_num,
+        SUM("quantity") OVER (
+            PARTITION BY "program_id", "item_name", "sizes"
+        ) AS total_quantity,
+        COUNT(*) OVER (
+            PARTITION BY "program_id", "item_name", "sizes"
+        ) AS group_count
     FROM "inventory"
-),
-duplicate_groups AS (
-    SELECT
-        "program_id",
-        "item_name",
-        "sizes",
-        SUM("quantity") AS total_quantity,
-        MIN("id") AS keeper_id
-    FROM "inventory"
-    GROUP BY "program_id", "item_name", "sizes"
-    HAVING COUNT(*) > 1
 )
 UPDATE "inventory" AS i
 SET
-    "quantity" = d.total_quantity,
+    "quantity" = r.total_quantity,
     "updated_at" = CURRENT_TIMESTAMP
-FROM duplicate_groups AS d
-WHERE i."id" = d.keeper_id;
+FROM ranked_inventory AS r
+WHERE i."id" = r.keeper_id
+  AND r.row_num = 1
+  AND r.group_count > 1;
 
 WITH ranked_inventory AS (
     SELECT
@@ -95,7 +93,7 @@ DELETE FROM "inventory" AS i
 USING ranked_inventory AS r
 WHERE i."id" = r."id"
   AND r.row_num > 1;
-
+  
 -- Enforce one row per program, item, and size.
 CREATE UNIQUE INDEX "uq_inventory_program_item_size"
 ON "inventory" ("program_id", "item_name", "sizes");

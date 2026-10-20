@@ -18,6 +18,7 @@ import { RegistrarModule } from './users/registrar/registrar.module';
 import { AdminBatchesModule } from './users/admin/batches/batches.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
 import { AdminTraineesModule } from './users/admin/trainee-information/trainees.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { AdminTraineesModule } from './users/admin/trainee-information/trainees.
     AdminBatchesModule,
     AnnouncementsModule,
     AdminTraineesModule,
+    InventoryModule,
   ],
 
   controllers: [SessionsController, AppController],
