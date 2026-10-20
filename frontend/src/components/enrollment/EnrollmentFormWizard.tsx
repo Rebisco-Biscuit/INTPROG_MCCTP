@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { EnrollmentFormData, TraineeData, RequirementChecklistData, BatchInfo } from '../../types/enrollment.type';
-import { createEnrollment, searchTrainees, getAvailableBatches } from '../../api/enrollments/enrollment.api';
+import { useEnrollmentApi } from '../../context/EnrollmentApiContext';
 import EnrollmentStatusBadge from './EnrollmentStatusBadge';
 
 interface EnrollmentFormWizardProps {
@@ -34,7 +34,8 @@ const EnrollmentFormWizard: React.FC<EnrollmentFormWizardProps> = ({
   onSuccess,
   onCancel,
 }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // API calls for this page's role (registrar or admin routes)
+  const { createEnrollment } = useEnrollmentApi();  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [successResult, setSuccessResult] = useState<any>(null);
@@ -280,7 +281,7 @@ const EnrollmentFormWizard: React.FC<EnrollmentFormWizardProps> = ({
     );
   }
 
-  // Keep the workflow on one page so the registrar can review the complete record before committing it.
+  // Keep the workflow on one page so staff can review the complete record before committing it.
   return (
     <div className="space-y-4">
       {/* Error display */}
@@ -367,7 +368,8 @@ const Step1TraineeInfo: React.FC<{
   onTraineeChange: (updates: Partial<TraineeData>) => void;
   missingFields: Set<string>;
 }> = ({ traineeData, onTraineeChange, missingFields }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  // API calls for this page's role (registrar or admin routes)
+  const { searchTrainees } = useEnrollmentApi();  const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
@@ -415,7 +417,7 @@ const Step1TraineeInfo: React.FC<{
       gender: trainee.gender || 'MALE',
       hasActiveInsurance: trainee.hasActiveInsurance,
       isExistingTrainee: true,
-      // Pre-fill the saved beneficiary; the registrar can still edit it
+      // Pre-fill the saved beneficiary; staff can still edit it
       beneficiary: {
         firstName: trainee.trainee_beneficiaries?.first_name || '',
         middleName: trainee.trainee_beneficiaries?.middle_name || '',
@@ -567,7 +569,8 @@ const Step2BatchSelection: React.FC<{
   batchId: string;
   onBatchChange: (batchId: string) => void;
 }> = ({ traineeId, batchId, onBatchChange }) => {
-  const [batches, setBatches] = useState<BatchInfo[]>([]);
+  // API calls for this page's role (registrar or admin routes)
+  const { getAvailableBatches } = useEnrollmentApi();  const [batches, setBatches] = useState<BatchInfo[]>([]);
   const [selectedProgramId, setSelectedProgramId] = useState('');
   const [programQuery, setProgramQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -587,7 +590,7 @@ const Step2BatchSelection: React.FC<{
     } finally {
       setIsLoading(false);
     }
-  }, [traineeId]);
+  }, [getAvailableBatches, traineeId]);
 
   React.useEffect(() => {
     void loadBatches();
