@@ -20,6 +20,7 @@ import TrainerDashboard from '../pages/users/trainer/TrainerDashboard'
 
 import TraineeDashboard from '../pages/users/trainee/TraineeDashboard'
 import EncoderDashboard from '../pages/users/encoder/EncoderDashboard'
+import EncoderAnnouncementsPage from '../pages/users/encoder/announcements/EncoderAnnouncementsPage'
 
 import RegistrarAnnouncementsPage from '../pages/users/registrar/announcements/RegistrarAnnouncementsPage'
 
@@ -294,6 +295,15 @@ return ( <Routes>
     element={
       <ProtectedRoute allowedRoles={['ENCODER']}>
         <EncoderDashboard />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/encoder/announcements"
+    element={
+      <ProtectedRoute allowedRoles={['ENCODER']}>
+        <EncoderAnnouncementsPage />
       </ProtectedRoute>
     }
   />

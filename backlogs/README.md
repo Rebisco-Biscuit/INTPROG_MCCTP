@@ -36,6 +36,8 @@ backlogs/
     account-generation/acceptance.md             — MP-26: Trainee Account Generation
   encoder/
     dashboard/acceptance.md                      — Encoder Dashboard (placeholder, 4 pages planned)
+  technical/
+    e2e-test-config/acceptance.md                — TECH-01: Jest ESM config fix for e2e tests
 ```
 
 ---
@@ -98,6 +100,12 @@ backlogs/
 |--------|--------|----------|--------|------|
 | MP-33 | Admin Enrollments | Chelsea Cllj | In Progress | 8 FAIL, 2 PARTIAL — 7 critical gaps |
 | MP-25 | Payments | Vince Jon Gonzalez | Not Started | 0/30 criteria |
+
+### Technical Debt
+
+| ID      | Issue                              | Priority | Status      | Notes                                                  |
+|---------|------------------------------------|----------|-------------|--------------------------------------------------------|
+| TECH-01 | E2E Test Jest ESM Compatibility    | Medium   | Not Started | `@nestjs/config` ESM breaks `jest-e2e.json` transform  |
 
 ---
 
