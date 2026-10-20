@@ -57,7 +57,7 @@
 | 21 | Admin can edit requirement checklist (Edit/Save/Cancel) | PASS | Edit flow works |
 | 22 | `checked_by` and `checked_at` updated on checklist edit | PASS | Backend records admin's user ID |
 | 23 | `id_card_number`, OR number, `enrolled_by` are read-only | PASS | Not editable in UI |
-| 24 | Success/error toast after every action; list refreshes | FAIL | No success toast; list doesn't refresh after status change |
+| 24 | Success/error toast after every action; list refreshes | PASS | Toast implemented in EnrollmentDetail; list refreshes via onUpdated → refreshKey |
 
 ### Backend
 
@@ -95,7 +95,6 @@
 9. `checked_by` staff name not displayed (#12)
 10. `enrolled_by` staff name not rendered (#30)
 11. Table missing columns: Batch, Uniform, OR, Enrolled by, Change status (#30)
-12. No success/error toast notifications (#24)
 
 ---
 
@@ -366,7 +365,7 @@
 
 ---
 
-## Summary: 17 PASS, 2 PARTIAL, 8 FAIL
+## Summary: 18 PASS, 2 PARTIAL, 7 FAIL
 
 ### Unit Test Coverage (2026-10-20)
 

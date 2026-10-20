@@ -46,13 +46,13 @@ export class AnnouncementsController {
   }
 
   @Get()
-  // Admins and registrars may fetch the full paginated management list.
-  @Roles(Role.ADMIN, Role.REGISTRAR)
+  @Roles(Role.ADMIN, Role.REGISTRAR, Role.ENCODER)
   findAll(@Req() req: AnnouncementRequest) {
     return this.announcementsService.findAll(req.query, req.user);
   }
 
   @Get('active')
+  @Roles(Role.ADMIN, Role.REGISTRAR, Role.ENCODER, Role.TRAINER, Role.TRAINEE)
   findActive(@Req() req: AnnouncementRequest) {
     return this.announcementsService.findActive(req.user);
   }
@@ -68,7 +68,7 @@ export class AnnouncementsController {
   }
 
   @Delete(':id')
-  @Roles(Role.ADMIN, Role.REGISTRAR)
+  @Roles(Role.ADMIN, Role.REGISTRAR, Role.ENCODER)
   remove(
     @Param('id', ParseUUIDPipe) id: string,
     @Req() req: AnnouncementRequest,

@@ -18,7 +18,8 @@
 | 2026-10-12 | MP-16 | Enrollment: re-enrollment, batch redesign, detail fixes | PR #15 `staging` | Sprint 2 |
 | 2026-10-19 | MP-24 | Trainee Information Module (admin + registrar) | PR #16 `feature/MP-24-trainee-information` | Sprint 3 |
 | 2026-10-20 | MP-24 | Trainee Information — final (shared module move, backlogs) | PR #17 `dev` → PR #18 `staging` | Sprint 3 |
-| 2026-10-20 | MP-33 | Admin Enrollments Module (unit tested, 56/56 pass) | PR #21 `adminEnrollment` | Sprint 3 |
+| 2026-10-20 | — | Backlogs restructure (consistent format + structured test cases) | PR #19, PR #20 `backlogs-restructure` | — |
+| 2026-10-20 | MP-33, MP-16 | Admin Enrollment Module + registrar UUID validation | PR #21 `adminEnrollment` → PR #22 `dev` → PR #23 `staging` | Sprint 3 |
 
 ---
 
@@ -26,4 +27,5 @@
 
 | Ticket | Feature | Branch | Assignee | Status |
 |--------|---------|--------|----------|--------|
+| MP-37 | Encoder Announcement Module + Dashboard Widgets (Trainer, Trainee) | `mp-37-encoder-announcements` | Chelsea Cllj | In Progress |
 | MP-25 | Payments Module | — | Vince Jon Gonzalez | Not Started |
