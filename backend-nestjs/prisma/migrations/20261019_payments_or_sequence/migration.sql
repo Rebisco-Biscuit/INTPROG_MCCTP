@@ -34,11 +34,5 @@ CREATE INDEX IF NOT EXISTS "idx_official_receipts_method"
 CREATE INDEX IF NOT EXISTS "idx_official_receipts_confirmed_by"
   ON "public"."official_receipts"("confirmed_by");
 
-CREATE INDEX IF NOT EXISTS "idx_users_first_name_trgm"
-  ON "public"."users" USING GIN ("first_name" gin_trgm_ops);
-
-CREATE INDEX IF NOT EXISTS "idx_users_last_name_trgm"
-  ON "public"."users" USING GIN ("last_name" gin_trgm_ops);
-
 CREATE INDEX IF NOT EXISTS "idx_users_system_id_trgm"
   ON "public"."users" USING GIN ("system_id" gin_trgm_ops);

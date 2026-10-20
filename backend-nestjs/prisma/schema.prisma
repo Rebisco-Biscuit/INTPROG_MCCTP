@@ -545,8 +545,6 @@ model users {
   user_role                           user_role[]
   withdrawal_request                  withdrawal_request[]
 
-  @@index([first_name(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_users_first_name_trgm")
-  @@index([last_name(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_users_last_name_trgm")
   @@index([system_id(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_users_system_id_trgm")
 
   @@index([first_name(ops: raw("gin_trgm_ops"))], map: "idx_users_first_name_trgm", type: Gin)
