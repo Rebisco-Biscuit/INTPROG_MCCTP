@@ -18,6 +18,7 @@ import { RegistrarModule } from './users/registrar/registrar.module';
 import { AdminBatchesModule } from './users/admin/batches/batches.module';
 import { AdminEnrollmentsModule } from './users/admin/enrollments/enrollments.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
+import { PaymentsModule } from './payments/payments.module';
 import { AdminTraineesModule } from './users/admin/trainee-information/trainees.module';
 import { InventoryModule } from './inventory/inventory.module';
 
@@ -47,6 +48,7 @@ import { InventoryModule } from './inventory/inventory.module';
     AdminBatchesModule,
     AdminEnrollmentsModule,
     AnnouncementsModule,
+    PaymentsModule,
     AdminTraineesModule,
     InventoryModule,
   ],

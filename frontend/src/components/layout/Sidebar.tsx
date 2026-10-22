@@ -159,6 +159,11 @@ const sidebarConfig: Record<
             path: '/trainer/dashboard',
             icon: 'fa-solid fa-gauge-high',
           },
+          {
+            label: 'Announcements',
+            path: '/trainer/announcements',
+            icon: 'fa-solid fa-bullhorn',
+          },
         ],
       },
 
@@ -297,6 +302,11 @@ const sidebarConfig: Record<
             path: '/encoder/dashboard',
             icon: 'fa-solid fa-gauge-high',
           },
+          {
+            label: 'Announcements',
+            path: '/encoder/announcements',
+            icon: 'fa-solid fa-bullhorn',
+          },
         ],
       },
 
@@ -407,6 +417,11 @@ const sidebarConfig: Record<
             label: 'Inventory',
             path: '/registrar/inventory',
             icon: 'fa-solid fa-boxes-stacked',
+          },
+          {
+            label: 'Payments',
+            path: '/registrar/payments',
+            icon: 'fa-solid fa-peso-sign',
           },
         ],
       },

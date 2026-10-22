@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 import LandingPage from '../pages/public/LandingPage'
@@ -11,17 +12,20 @@ import RegistrarEnrollment from '../pages/users/registrar/RegistrarEnrollment'
 import AdminBatchConfiguration from '../pages/users/admin/batches/AdminBatchConfiguration'
 import AdminAnnouncementsPage from '../pages/users/admin/announcements/AdminAnnouncementsPage'
 import AdminEnrollmentPage from '../pages/users/admin/enrollment/AdminEnrollmentPage'
-import AdminPaymentsPage from '../pages/users/admin/payments/AdminPaymentsPage'
 import AdminInventoryPage from '../pages/users/admin/inventory/AdminInventoryPage'
 import AdminReportsPage from '../pages/users/admin/reports/AdminReportsPage'
 import AdminImportDataPage from '../pages/users/admin/import-data/AdminImportDataPage'
 
 import TrainerDashboard from '../pages/users/trainer/TrainerDashboard'
+import TrainerAnnouncementsPage from '../pages/users/trainer/announcements/TrainerAnnouncementsPage'
 
 import TraineeDashboard from '../pages/users/trainee/TraineeDashboard'
 import EncoderDashboard from '../pages/users/encoder/EncoderDashboard'
+import EncoderAnnouncementsPage from '../pages/users/encoder/announcements/EncoderAnnouncementsPage'
 
 import RegistrarAnnouncementsPage from '../pages/users/registrar/announcements/RegistrarAnnouncementsPage'
+const AdminPaymentsPage = lazy(() => import('../pages/users/admin/AdminPaymentsPage'))
+const RegistrarPaymentsPage = lazy(() => import('../pages/users/registrar/RegistrarPaymentsPage'))
 
 import ProtectedRoute from '../components/auth/ProtectedRoute'
 import PublicOnlyRoute from '../components/auth/PublicOnlyRoute'
@@ -74,6 +78,17 @@ return ( <Routes>
     element={
       <ProtectedRoute allowedRoles={['ADMIN']}>
         <AdminRecords />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/admin/payments"
+    element={
+      <ProtectedRoute allowedRoles={['ADMIN']}>
+        <Suspense fallback={<div className="p-6 text-sm text-slate-500">Loading payments...</div>}>
+          <AdminPaymentsPage />
+        </Suspense>
       </ProtectedRoute>
     }
   />
@@ -135,15 +150,6 @@ return ( <Routes>
 />
 
 <Route
-  path="/admin/payments"
-  element={
-    <ProtectedRoute allowedRoles={['ADMIN']}>
-      <AdminPaymentsPage />
-    </ProtectedRoute>
-  }
-/>
-
-<Route
   path="/admin/inventory"
   element={
     <ProtectedRoute allowedRoles={['ADMIN']}>
@@ -199,6 +205,17 @@ return ( <Routes>
     }
   />
 
+  <Route
+    path="/registrar/payments"
+    element={
+      <ProtectedRoute allowedRoles={['REGISTRAR']}>
+        <Suspense fallback={<div className="p-6 text-sm text-slate-500">Loading payments...</div>}>
+          <RegistrarPaymentsPage />
+        </Suspense>
+      </ProtectedRoute>
+    }
+  />
+
   {/* Trainee Information (MP-24): shared, read-only */}
   <Route
     path="/admin/trainees"
@@ -241,6 +258,15 @@ return ( <Routes>
     element={
       <ProtectedRoute allowedRoles={['TRAINER']}>
         <TrainerDashboard />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/trainer/announcements"
+    element={
+      <ProtectedRoute allowedRoles={['TRAINER']}>
+        <TrainerAnnouncementsPage />
       </ProtectedRoute>
     }
   />
@@ -294,6 +320,15 @@ return ( <Routes>
     element={
       <ProtectedRoute allowedRoles={['ENCODER']}>
         <EncoderDashboard />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/encoder/announcements"
+    element={
+      <ProtectedRoute allowedRoles={['ENCODER']}>
+        <EncoderAnnouncementsPage />
       </ProtectedRoute>
     }
   />
