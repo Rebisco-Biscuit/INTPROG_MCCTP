@@ -239,7 +239,7 @@ export class InventoryService {
         const item = await tx.inventory.create({
           data: {
             program_id: dto.program_id,
-            item_name: dto.item_name.trim(),
+            item_name: 'Uniform Shirt',
             sizes: size,
             quantity: dto.quantity,
             updated_by: userId,
