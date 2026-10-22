@@ -13,8 +13,7 @@ import {
 } from '../generated/prisma/client';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
-
-type AuthenticatedUser = { id: string; role: string };
+import type { AuthenticatedUser } from '../common/types/authenticated-user.type';
 export type AnnouncementListQuery = {
   page?: string;
   limit?: string;
