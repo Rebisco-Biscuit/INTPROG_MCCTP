@@ -16,6 +16,7 @@ import {
   EnrollmentFilterDto,
 } from './dto/update-enrollment.dto';
 import { day_enum, enrollment_status_enum } from '../generated/prisma/enums';
+import { generateOrNumber } from '../payments/or-number';
 
 /** Initial portal password for new trainee accounts (shown once on the success screen). */
 const DEFAULT_TRAINEE_PASSWORD = 'traineedefault';
@@ -799,7 +800,7 @@ export class EnrollmentsService {
                 select: { coverage_id: true },
               });
               const baseFee = activeCoverage ? 450 : 500;
-              orNumber = `OR-${paymentDate.getFullYear()}-${enrollment.id.slice(0, 8).toUpperCase()}`;
+              orNumber = await generateOrNumber(tx, paymentDate);
               const receipt = await tx.official_receipts.create({
                 data: {
                   enrollment_id: enrollment.id,

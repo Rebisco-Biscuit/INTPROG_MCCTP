@@ -12,7 +12,7 @@
     "demo:enrollment": "tsx prisma/demo-enrollment.ts",
     "demo:enrollment:clean": "tsx prisma/demo-enrollment.ts --clean",
     "start": "nest start",
-    "prestart:dev": "node scripts/free-port.cjs 3000",
+    "prestart:dev": "prisma generate && node scripts/free-port.cjs 3000",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main.js",
