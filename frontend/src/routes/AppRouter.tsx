@@ -12,7 +12,6 @@ import RegistrarEnrollment from '../pages/users/registrar/RegistrarEnrollment'
 import AdminBatchConfiguration from '../pages/users/admin/batches/AdminBatchConfiguration'
 import AdminAnnouncementsPage from '../pages/users/admin/announcements/AdminAnnouncementsPage'
 import AdminEnrollmentPage from '../pages/users/admin/enrollment/AdminEnrollmentPage'
-import AdminPaymentsPage from '../pages/users/admin/payments/AdminPaymentsPage'
 import AdminInventoryPage from '../pages/users/admin/inventory/AdminInventoryPage'
 import AdminReportsPage from '../pages/users/admin/reports/AdminReportsPage'
 import AdminImportDataPage from '../pages/users/admin/import-data/AdminImportDataPage'
@@ -145,15 +144,6 @@ return ( <Routes>
   element={
     <ProtectedRoute allowedRoles={['ADMIN']}>
       <AdminEnrollmentPage />
-    </ProtectedRoute>
-  }
-/>
-
-<Route
-  path="/admin/payments"
-  element={
-    <ProtectedRoute allowedRoles={['ADMIN']}>
-      <AdminPaymentsPage />
     </ProtectedRoute>
   }
 />
