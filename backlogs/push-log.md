@@ -24,6 +24,8 @@
 | 2026-10-20 | TECH-01 | Technical debt backlog for e2e Jest ESM config | PR #25 `backlog-technical-debt` | — |
 | 2026-10-20 | MP-37 | Encoder Announcements Module + Dashboard Widgets (Trainer, Trainee, Encoder) | PR #26 `mp-37-encoder-announcements` | Sprint 3 |
 | 2026-10-20 | — | Dev sync merge (resolve conflicts in acceptance.md and push-log.md) | PR #27 `merge-dev-sync` | — |
+| 2026-10-20 | — | Dev merge (push log PRs #24–#27, announcements role permissions) | PR #28 `dev` | — |
+| 2026-10-20 | — | Staging → main (push log updates, role permissions table) | PR #29 `staging` | — |
 
 ---
 
@@ -49,3 +51,4 @@
 | Ticket | Feature | Branch | Assignee | Status |
 |--------|---------|--------|----------|--------|
 | MP-25 | Payments Module | — | Vince Jon Gonzalez | Not Started |
+| MP-39 | Trainer Announcements Module | `trainerannouncements` | Chelsea Cllj | To Do |
