@@ -67,14 +67,30 @@ export class InventoryService {
       Math.max(1, Number(query.limit) || DEFAULT_LIMIT),
     );
 
+    const search = query.search?.trim();
+
     const where: Prisma.inventoryWhereInput = {
       ...(query.programId && { program_id: query.programId }),
       ...(query.size && { sizes: this.validateSize(query.size) }),
-      ...(query.search && {
-        item_name: {
-          contains: query.search.trim(),
-          mode: 'insensitive',
-        },
+      ...(search && {
+        OR: [
+          {
+            item_name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+          {
+            programs: {
+              is: {
+                name: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        ],
       }),
     };
 
