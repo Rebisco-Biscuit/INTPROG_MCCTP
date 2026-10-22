@@ -8,6 +8,7 @@ import {
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import type { LoginDto, CreateAccountDto } from './auth.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -33,6 +34,8 @@ export class AuthController {
    *   - sessionToken → sent as X-Session-Token header on every request
    */
   @Public()
+  // Strict limit against password guessing: 15 attempts a minute per IP
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto) {

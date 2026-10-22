@@ -1,0 +1,136 @@
+# MCCTEST Portal — Backlog Tracking
+
+Structured acceptance criteria extracted from Jira, organized by role and module.
+Each `acceptance.md` file contains acceptance criteria with PASS / PARTIAL / FAIL status.
+
+---
+
+## Folder Structure
+
+```
+backlogs/
+  README.md                                      — This file
+  push-log.md                                    — When each feature was pushed to main
+  shared/
+    authentication/acceptance.md                 — MP-4: Auth & Landing Page
+    landing-page/acceptance.md                   — MP-20: Landing Page Chatbot
+  admin/
+    dashboard/acceptance.md                      — MP-8: Admin Dashboard (placeholder)
+    programs/acceptance.md                       — MP-13: Programs Module
+    staff-accounts/acceptance.md                 — MP-14: Staff User Accounts
+    announcements/acceptance.md                  — MP-21: Announcements Module
+    batches/acceptance.md                        — MP-22/23: Batch Management + Trainee Management
+    trainee-information/acceptance.md            — MP-24: Trainee Information (shared, view-only)
+    enrollment/acceptance.md                     — MP-33: Admin Enrollments Module (IN PROGRESS)
+    payments/acceptance.md                       — MP-25: Payments Module (NOT STARTED)
+  registrar/
+    dashboard/acceptance.md                      — Registrar Dashboard (placeholder)
+    batches/acceptance.md                        — MP-15: Batch Configuration Module
+    enrollment/acceptance.md                     — MP-16: Enrollment Form Module
+    announcements/acceptance.md                  — MP-31: Registrar Announcements
+    trainee-information/acceptance.md            — MP-24: Trainee Information (shared, view-only)
+  trainer/
+    dashboard/acceptance.md                      — Trainer Dashboard (placeholder, 7 pages planned)
+  trainee/
+    dashboard/acceptance.md                      — Trainee Dashboard (placeholder, 7 pages planned)
+    account-generation/acceptance.md             — MP-26: Trainee Account Generation
+  encoder/
+    dashboard/acceptance.md                      — Encoder Dashboard (placeholder, 4 pages planned)
+  technical/
+    e2e-test-config/acceptance.md                — TECH-01: Jest ESM config fix for e2e tests
+```
+
+---
+
+## Status Legend
+
+| Status | Meaning |
+|--------|---------|
+| PASS | Acceptance criteria verified and working |
+| PARTIAL | Partially implemented, gaps documented |
+| FAIL | Not working or missing critical functionality |
+| NOT TESTED | Code exists but not yet manually verified |
+| NOT STARTED | Feature has not been built yet |
+
+---
+
+## Sprint Summary
+
+| Sprint | Dates | Tickets | Status |
+|--------|-------|---------|--------|
+| MP Sprint 1 | 2026-08-23 → 2026-08-30 | MP-4, MP-8 | All Done |
+| MP Sprint 2 | 2026-09-02 → 2026-10-12 | MP-13, MP-14, MP-15, MP-16, MP-20, MP-21, MP-22, MP-23, MP-26, MP-31 | All Done |
+| MP Sprint 3 | 2026-10-12 → 2026-10-18 | MP-24, MP-25, MP-33 | MP-24 Done, MP-25 To Do, MP-33 In Progress |
+
+---
+
+## Acceptance Criteria Scorecard
+
+### By Module (features merged to main)
+
+| Ticket | Module | Role | Assignee | Result |
+|--------|--------|------|----------|--------|
+| MP-4 | Authentication & Landing Page | Shared | Aubrien Fuentes | 8/8 PASS |
+| MP-20 | Landing Page Chatbot | Shared | Chelsea Cllj | 3/3 PASS |
+| MP-8 | Dashboard (placeholder) | Admin | Vince Jon Gonzalez | 4/4 PASS |
+| MP-13 | Programs | Admin | Rhoddz Gerunda | 6/6 PASS |
+| MP-14 | Staff Accounts | Admin | Aubrien Fuentes | 6/6 PASS |
+| MP-21 | Announcements | Admin | Chelsea Cllj | 19/19 PASS |
+| MP-22 | Batch Management | Admin | Chelsea Cllj | 20/20 PASS |
+| MP-23 | Batch Trainee Management | Admin | Chelsea Cllj | 18/18 PASS |
+| MP-24 | Trainee Information | Admin | Aubrien Fuentes | 29 PASS, 4 PARTIAL |
+| MP-15 | Batch Configuration | Registrar | Aubrien Fuentes | 6/6 PASS |
+| MP-16 | Enrollment Form | Registrar | Vince Jon Gonzalez | 7/7 PASS |
+| MP-31 | Announcements | Registrar | Chelsea Cllj | 28/28 PASS |
+| MP-24 | Trainee Information | Registrar | Aubrien Fuentes | 29 PASS, 4 PARTIAL |
+| MP-26 | Account Generation | Trainee | Chelsea Cllj | 12/12 PASS |
+
+### Placeholders (dashboard only, no feature pages)
+
+| Role | Dashboard | Planned Pages |
+|------|-----------|---------------|
+| Registrar | 4/4 PASS | — |
+| Trainer | 4/4 PASS | 7 NOT STARTED |
+| Trainee | 4/4 PASS | 7 NOT STARTED |
+| Encoder | 4/4 PASS | 4 NOT STARTED |
+
+### In Progress / Not Started
+
+| Ticket | Module | Assignee | Status | Gaps |
+|--------|--------|----------|--------|------|
+| MP-33 | Admin Enrollments | Chelsea Cllj | In Progress | 8 FAIL, 2 PARTIAL — 7 critical gaps |
+| MP-25 | Payments | Vince Jon Gonzalez | Not Started | 0/30 criteria |
+
+### Technical Debt
+
+| ID      | Issue                              | Priority | Status      | Notes                                                  |
+|---------|------------------------------------|----------|-------------|--------------------------------------------------------|
+| TECH-01 | E2E Test Jest ESM Compatibility    | Medium   | Not Started | `@nestjs/config` ESM breaks `jest-e2e.json` transform  |
+
+---
+
+## File Format
+
+Every `acceptance.md` follows this structure:
+
+```
+# [Ticket]: [Role] — [Module Name]
+
+| Field | Value |
+|-------|-------|
+| Jira  | ...   |
+| ...   | ...   |
+
+---
+
+## Acceptance Criteria
+
+### [Section]
+
+| # | Criteria | Status | Notes |
+|---|---------|--------|-------|
+
+---
+
+## Summary: X PASS, Y PARTIAL, Z FAIL
+```

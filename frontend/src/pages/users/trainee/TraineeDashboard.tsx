@@ -2,6 +2,7 @@ import React from 'react'
 import Header from '../../../components/layout/Header'
 import Sidebar from '../../../components/layout/Sidebar'
 import Footer from '../../../components/layout/Footer'
+import AnnouncementWidget from '../../../components/Announcements/AnnouncementWidget'
 import { useAuth } from '../../../context/AuthContext'
 
 const TraineeDashboard: React.FC = () => {
@@ -47,6 +48,12 @@ const TraineeDashboard: React.FC = () => {
                   </p>
                 </div>
               </div>
+            </div>
+          </section>
+
+          <section className="bg-slate-50">
+            <div className="mx-auto max-w-7xl px-6 pt-12 lg:px-8">
+              <AnnouncementWidget />
             </div>
           </section>
 

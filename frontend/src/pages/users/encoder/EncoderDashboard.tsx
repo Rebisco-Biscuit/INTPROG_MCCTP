@@ -2,6 +2,7 @@ import React from 'react'
 import Header from '../../../components/layout/Header'
 import Sidebar from '../../../components/layout/Sidebar'
 import Footer from '../../../components/layout/Footer'
+import AnnouncementWidget from '../../../components/Announcements/AnnouncementWidget'
 import { useAuth } from '../../../context/AuthContext'
 
 const EncoderDashboard: React.FC = () => {
@@ -65,6 +66,13 @@ const EncoderDashboard: React.FC = () => {
 
               </div>
 
+            </div>
+          </section>
+
+          {/* ANNOUNCEMENTS */}
+          <section className="bg-slate-50">
+            <div className="mx-auto max-w-7xl px-6 pt-12 lg:px-8">
+              <AnnouncementWidget />
             </div>
           </section>
 

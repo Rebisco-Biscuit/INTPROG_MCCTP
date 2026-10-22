@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { getEnrollments, getPrograms } from '../../api/enrollments/enrollment.api';
+import { useEnrollmentApi } from '../../context/EnrollmentApiContext';
 import EnrollmentStatusBadge from './EnrollmentStatusBadge';
 import type { EnrollmentRecord, Program } from '../../types/enrollment.type';
 
@@ -8,7 +8,8 @@ interface EnrollmentTableProps {
 }
 
 const EnrollmentTable: React.FC<EnrollmentTableProps> = ({ onSelectEnrollment }) => {
-  const [enrollments, setEnrollments] = useState<EnrollmentRecord[]>([]);
+  // API calls for this page's role (registrar or admin routes)
+  const { getEnrollments, getPrograms } = useEnrollmentApi();  const [enrollments, setEnrollments] = useState<EnrollmentRecord[]>([]);
   const [total, setTotal] = useState(0);
   const [programs, setPrograms] = useState<Program[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +25,7 @@ const EnrollmentTable: React.FC<EnrollmentTableProps> = ({ onSelectEnrollment })
   const pageSize = 10;
   const requestNumber = useRef(0);
 
-  async function loadInitialData() {
+  const loadInitialData = useCallback(async () => {
     try {
       setIsLoading(true);
       const [programsData] = await Promise.all([
@@ -38,7 +39,7 @@ const EnrollmentTable: React.FC<EnrollmentTableProps> = ({ onSelectEnrollment })
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [getPrograms]);
 
   const loadEnrollments = useCallback(async () => {
     const currentRequest = ++requestNumber.current;
@@ -68,11 +69,11 @@ const EnrollmentTable: React.FC<EnrollmentTableProps> = ({ onSelectEnrollment })
     } finally {
       setIsLoading(false);
     }
-  }, [search, programIdFilter, statusFilter, startDate, endDate, pageNumber]);
+  }, [getEnrollments, search, programIdFilter, statusFilter, startDate, endDate, pageNumber]);
 
   useEffect(() => {
     void loadInitialData();
-  }, []);
+  }, [loadInitialData]);
 
   // loadEnrollments changes whenever a filter changes, which re-runs this effect
   useEffect(() => {

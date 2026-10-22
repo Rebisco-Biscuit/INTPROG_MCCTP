@@ -102,11 +102,6 @@ const sidebarConfig: Record<
             icon: 'fa-solid fa-folder-open',
           },
           {
-            label: 'Announcements',
-            path: '/admin/announcements',
-            icon: 'fa-solid fa-bullhorn',
-          },
-          {
             label: 'Payments',
             path: '/admin/payments',
             icon: 'fa-solid fa-peso-sign',
@@ -120,6 +115,11 @@ const sidebarConfig: Record<
             label: 'Reports',
             path: '/admin/reports',
             icon: 'fa-solid fa-chart-column',
+          },
+          {
+            label: 'Import Data',
+            path: '/admin/import-data',
+            icon: 'fa-solid fa-file-import',
           },
         ],
       },
@@ -296,6 +296,11 @@ const sidebarConfig: Record<
             label: 'Dashboard',
             path: '/encoder/dashboard',
             icon: 'fa-solid fa-gauge-high',
+          },
+          {
+            label: 'Announcements',
+            path: '/encoder/announcements',
+            icon: 'fa-solid fa-bullhorn',
           },
         ],
       },

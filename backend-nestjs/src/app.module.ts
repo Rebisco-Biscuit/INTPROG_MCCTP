@@ -16,6 +16,7 @@ import { StaffAccountsModule } from './users/admin/staff-accounts/staff-accounts
 import { BatchesModule } from './users/registrar/batches/batches.module';
 import { RegistrarModule } from './users/registrar/registrar.module';
 import { AdminBatchesModule } from './users/admin/batches/batches.module';
+import { AdminEnrollmentsModule } from './users/admin/enrollments/enrollments.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AdminTraineesModule } from './users/admin/trainee-information/trainees.module';
@@ -26,10 +27,12 @@ import { AdminTraineesModule } from './users/admin/trainee-information/trainees.
       isGlobal: true,
     }),
 
+    // Per IP: 120 requests a minute for normal use (staff in one office share
+    // an IP). Login has its own stricter limit in AuthController.
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
-        limit: 15,
+        limit: 120,
       },
     ]),
 
@@ -42,6 +45,7 @@ import { AdminTraineesModule } from './users/admin/trainee-information/trainees.
     BatchesModule,
     RegistrarModule,
     AdminBatchesModule,
+    AdminEnrollmentsModule,
     AnnouncementsModule,
     PaymentsModule,
     AdminTraineesModule,
