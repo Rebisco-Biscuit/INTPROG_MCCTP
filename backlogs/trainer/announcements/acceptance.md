@@ -17,70 +17,70 @@
 
 | # | Criteria | Status | Notes |
 |---|---------|--------|-------|
-| 1 | Trainer sees "Announcements" in the sidebar and `/trainer/announcements` loads without 403 | TODO | Route + sidebar + backend role |
-| 2 | Other roles cannot open `/trainer/announcements` | TODO | ProtectedRoute allowedRoles |
-| 3 | Unauthenticated user receives 401 on announcements API | TODO | JwtAuthGuard |
-| 4 | Trainer permissions enforced by backend, not only frontend | TODO | Server-side guards |
+| 1 | Trainer sees "Announcements" in the sidebar and `/trainer/announcements` loads without 403 | DONE | Route in AppRouter, sidebar link, TRAINER in controller @Roles |
+| 2 | Other roles cannot open `/trainer/announcements` | DONE | ProtectedRoute allowedRoles={['TRAINER']} |
+| 3 | Unauthenticated user receives 401 on announcements API | DONE | JwtAuthGuard on controller |
+| 4 | Trainer permissions enforced by backend, not only frontend | DONE | RolesGuard + @Roles on every endpoint |
 
 ### Scope Restrictions
 
 | # | Criteria | Status | Notes |
 |---|---------|--------|-------|
-| 5 | Scope picker shows only PROGRAM and BATCH; GLOBAL is not available | TODO | canPostGlobal={false} |
-| 6 | Calling `POST /announcements` with scope GLOBAL as trainer returns 403 | TODO | assertCanPost blocks GLOBAL |
-| 7 | Program and batch dropdowns list only the trainer's own batches and their programs | TODO | getOptions filtered by trainer |
-| 8 | Calling `POST /announcements` with a batch the trainer doesn't handle returns 403 | TODO | assertTrainerOwnsTarget |
-| 9 | Calling `POST /announcements` with a program the trainer has no batch in returns 403 | TODO | assertTrainerOwnsTarget |
+| 5 | Scope picker shows only PROGRAM and BATCH; GLOBAL is not available | DONE | canPostGlobal={false} hides GLOBAL option |
+| 6 | Calling `POST /announcements` with scope GLOBAL as trainer returns 403 | DONE | assertCanPost blocks GLOBAL for TRAINER |
+| 7 | Program and batch dropdowns list only the trainer's own batches and their programs | DONE | getOptions queries trainer's batches (OPEN/ONGOING) and their programs |
+| 8 | Calling `POST /announcements` with a batch the trainer doesn't handle returns 403 | DONE | assertTrainerOwnsTarget checks batch ownership |
+| 9 | Calling `POST /announcements` with a program the trainer has no batch in returns 403 | DONE | assertTrainerOwnsTarget checks program via batch |
 
 ### Create Announcement
 
 | # | Criteria | Status | Notes |
 |---|---------|--------|-------|
-| 10 | Trainer can create a valid PROGRAM announcement for their own program | TODO | POST /api/announcements |
-| 11 | Trainer can create a valid BATCH announcement for their own batch | TODO | POST /api/announcements |
-| 12 | Blank content rejected | TODO | Validation |
-| 13 | Content > 5,000 chars rejected | TODO | Max length enforced |
-| 14 | Remarks > 1,000 chars rejected | TODO | Max length enforced |
-| 15 | Created with authenticated trainer as posted_by | TODO | JWT user attached |
-| 16 | Returns 201 Created | TODO | Correct status code |
-| 17 | Frontend shows success message and refreshes list | TODO | Toast + list refresh |
+| 10 | Trainer can create a valid PROGRAM announcement for their own program | DONE | POST /api/announcements with scope validation + ownership check |
+| 11 | Trainer can create a valid BATCH announcement for their own batch | DONE | POST /api/announcements with scope validation + ownership check |
+| 12 | Blank content rejected | DONE | @IsNotEmpty on DTO + frontend validation |
+| 13 | Content > 5,000 chars rejected | DONE | @MaxLength(5000) on DTO + maxLength={5000} on textarea |
+| 14 | Remarks > 1,000 chars rejected | DONE | @MaxLength(1000) on DTO + maxLength={1000} on input |
+| 15 | Created with authenticated trainer as posted_by | DONE | req.user.id set as posted_by in service.create() |
+| 16 | Returns 201 Created | DONE | NestJS POST default status |
+| 17 | Frontend shows success message and refreshes list | DONE | setSuccess + loadAnnouncements after create |
 
 ### View Announcements
 
 | # | Criteria | Status | Notes |
 |---|---------|--------|-------|
-| 18 | List shows only announcements the trainer posted | TODO | posted_by filter |
-| 19 | Pagination returns correct data and meta | TODO | Standard pagination |
-| 20 | Search, scope filter, date filter work correctly | TODO | DTO validated |
-| 21 | Invalid page/limit/scope/date returns 400 | TODO | Clean error messages |
-| 22 | Empty state when no announcements | TODO | Rendered |
-| 23 | Loading and error states correct | TODO | Skeleton + error handling |
+| 18 | List shows only announcements the trainer posted | DONE | findAll filters by posted_by: user.id |
+| 19 | Pagination returns correct data and meta | DONE | page/limit/total/totalPages in response meta |
+| 20 | Search, scope filter, date filter work correctly | DONE | Query params validated and applied in findAll |
+| 21 | Invalid page/limit/scope/date returns 400 | DONE | BadRequestException for each invalid param |
+| 22 | Empty state when no announcements | DONE | "No announcements yet." rendered |
+| 23 | Loading and error states correct | DONE | "Loading announcements..." + error message display |
 
 ### Update Announcement
 
 | # | Criteria | Status | Notes |
 |---|---------|--------|-------|
-| 24 | Trainer can edit their own posts | TODO | PATCH /api/announcements/:id |
-| 25 | Trainer cannot edit another user's announcement | TODO | Ownership check |
-| 26 | Invalid UUID returns 400 | TODO | ParseUUIDPipe |
-| 27 | Non-existent announcement returns 404 | TODO | Not found |
-| 28 | Scope/program/batch cannot be reassigned on update | TODO | Locked fields |
-| 29 | Delete appears only if approved (optional step 1) | TODO | canDelete prop |
+| 24 | Trainer can edit their own posts | DONE | PATCH with ownership check (posted_by === user.id) |
+| 25 | Trainer cannot edit another user's announcement | DONE | ForbiddenException if posted_by !== user.id |
+| 26 | Invalid UUID returns 400 | DONE | ParseUUIDPipe on :id param |
+| 27 | Non-existent announcement returns 404 | DONE | NotFoundException in service.update() |
+| 28 | Scope/program/batch cannot be reassigned on update | DONE | UpdateAnnouncementDto only exposes content/remarks |
+| 29 | Delete appears only if approved (optional step 1) | DONE | canDelete not passed, defaults false for TRAINER; TRAINER excluded from @Delete roles |
 
 ### Dashboard
 
 | # | Criteria | Status | Notes |
 |---|---------|--------|-------|
-| 30 | Trainer dashboard shows announcement widget | TODO | AnnouncementWidget in TrainerDashboard |
-| 31 | Widget shows GLOBAL announcements plus those for trainer's own programs and batches | TODO | findActive logic |
+| 30 | Trainer dashboard shows announcement widget | DONE | AnnouncementWidget imported and rendered in TrainerDashboard |
+| 31 | Widget shows GLOBAL announcements plus those for trainer's own programs and batches | DONE | findActive returns GLOBAL + BATCH(trainer's) + PROGRAM(trainer's) |
 
 ### Regression
 
 | # | Criteria | Status | Notes |
 |---|---------|--------|-------|
-| 32 | Admin announcement options and posting behave the same as before | TODO | No regression |
-| 33 | Registrar announcement options and posting behave the same as before | TODO | No regression |
-| 34 | Encoder announcement options and posting behave the same as before | TODO | No regression |
+| 32 | Admin announcement options and posting behave the same as before | DONE | Shared backend; admin paths unchanged |
+| 33 | Registrar announcement options and posting behave the same as before | DONE | Shared backend; registrar paths unchanged |
+| 34 | Encoder announcement options and posting behave the same as before | DONE | Shared backend; encoder paths unchanged |
 
 ---
 
@@ -296,4 +296,4 @@
 
 ---
 
-## Summary: 0/34 — Not Started
+## Summary: 34/34 — Complete (code review verified)
