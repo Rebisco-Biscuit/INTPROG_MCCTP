@@ -46,9 +46,24 @@
 
 ---
 
+## Announcements — Trainer Permissions
+
+| Action | Trainer |
+|--------|---------|
+| Post Global | No (403) |
+| Post Program | Yes (own programs only) |
+| Post Batch | Yes (own batches only) |
+| View all (paginated + filters) | Own posts only |
+| Edit own announcements | Yes |
+| Edit others' announcements | No |
+| Delete | No (excluded from @Delete roles) |
+| Dashboard widget | GLOBAL + own programs + own batches |
+
+---
+
 ## In Progress
 
 | Ticket | Feature | Branch | Assignee | Status |
 |--------|---------|--------|----------|--------|
 | MP-25 | Payments Module | — | Vince Jon Gonzalez | Not Started |
-| MP-39 | Trainer Announcements Module | `trainerannouncements` | Chelsea Cllj | To Do |
+| MP-39 | Trainer Announcements Module | `staging` | Chelsea Cllj | Code Review Done (34/34 AC) |
