@@ -2,10 +2,12 @@ generator client {
   provider     = "prisma-client"
   output       = "../src/generated/prisma"
   moduleFormat = "cjs"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
   provider = "postgresql"
+  extensions = [pg_trgm]
 }
 
 model User {
@@ -308,6 +310,7 @@ model official_receipts {
   id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   enrollment_id      String               @db.Uuid
   or_number          String               @unique @db.VarChar(50)
+  idempotency_key    String?              @unique @db.VarChar(255)
   base_fee           Decimal              @db.Decimal(10, 2)
   amount             Decimal              @db.Decimal(10, 2)
   payment_date       DateTime             @db.Date
@@ -321,6 +324,18 @@ model official_receipts {
   enrollments        enrollments          @relation(fields: [enrollment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([enrollment_id], map: "idx_official_receipts_enrollment")
+  @@index([payment_date(sort: Desc)], map: "idx_official_receipts_payment_date")
+  @@index([created_at(sort: Desc)], map: "idx_official_receipts_created_at")
+  @@index([amount], map: "idx_official_receipts_amount")
+  @@index([or_number(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_official_receipts_or_number_trgm")
+  @@index([reason_of_dues], map: "idx_official_receipts_reason")
+  @@index([payment_method], map: "idx_official_receipts_method")
+  @@index([confirmed_by], map: "idx_official_receipts_confirmed_by")
+}
+
+model or_number_seq {
+  year          Int @id @db.SmallInt
+  last_sequence Int @default(0)
 }
 
 model programs {
@@ -529,6 +544,8 @@ model users {
   training_session                    training_session[]
   user_role                           user_role[]
   withdrawal_request                  withdrawal_request[]
+
+  @@index([system_id(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_users_system_id_trgm")
 
   @@index([first_name(ops: raw("gin_trgm_ops"))], map: "idx_users_first_name_trgm", type: Gin)
   @@index([last_name(ops: raw("gin_trgm_ops"))], map: "idx_users_last_name_trgm", type: Gin)

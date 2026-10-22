@@ -236,7 +236,7 @@ function BatchManagement() {
                     placeholder="Search batches by name, program, or trainer…"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full border border-slate-200 py-2.5 pl-9 pr-3 text-xs outline-none transition focus:border-blue-900"
+                    className="w-full border border-slate-200 py-2.5 pl-9 pr-3 text-xs outline-none transition focus:ring-2 focus:ring-blue-900/20"
                   />
                 </div>
 
