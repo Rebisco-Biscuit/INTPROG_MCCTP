@@ -283,7 +283,7 @@ model inventory {
   programs               programs                 @relation(fields: [program_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users                  users                    @relation(fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@unique([program_id, item_name, sizes], map: "uq_inventory_program_item_size")
+  @@unique([program_id, sizes], map: "uq_inventory_program_size")
   @@index([program_id, sizes], map: "idx_inventory_program_size")
 }
 
