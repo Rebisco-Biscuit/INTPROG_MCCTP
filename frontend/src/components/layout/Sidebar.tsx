@@ -418,6 +418,11 @@ const sidebarConfig: Record<
             path: '/registrar/inventory',
             icon: 'fa-solid fa-boxes-stacked',
           },
+          {
+            label: 'Payments',
+            path: '/registrar/payments',
+            icon: 'fa-solid fa-peso-sign',
+          },
         ],
       },
     ],
