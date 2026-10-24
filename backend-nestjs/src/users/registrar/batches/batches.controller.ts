@@ -15,6 +15,7 @@ import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/roles.decorator';
 import { Role } from '../../../common/enums/role.enum';
+import type { AuthenticatedUser } from '../../../common/types/authenticated-user.type';
 import { BatchesService } from './batches.service';
 import { CreateBatchDto } from './dto/create-batch.dto';
 import { UpdateBatchDto, UpdateBatchStatusDto } from './dto/update-batch.dto';
@@ -47,35 +48,36 @@ export class BatchesController {
     });
   }
 
-    @Get('programs')
-    getPrograms() {
+  @Get('programs')
+  getPrograms() {
     return this.batchesService.getPrograms();
-    }
+  }
 
-    @Get('trainers')
-    getTrainers() {
+  @Get('trainers')
+  getTrainers() {
     return this.batchesService.getTrainers();
-    }
+  }
 
-    @Get('dropdown-data')
-    getDropdownData() {
+  @Get('dropdown-data')
+  getDropdownData() {
     return this.batchesService.getDropdownData();
-    }
+  }
 
-    @Get(':id')
-    findOne(@Param('id', ParseUUIDPipe) id: string) {
+  @Get(':id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.batchesService.findOne(id);
-    }
+  }
 
   /**
    * POST /api/registrar/batches
    */
-    @Post()
-    create(@Body() dto: CreateBatchDto, @Request() req: any) {
-    
+  @Post()
+  create(
+    @Body() dto: CreateBatchDto,
+    @Request() req: { user: AuthenticatedUser },
+  ) {
     return this.batchesService.create(dto, req.user?.id);
-    }
-
+  }
 
   /**
    * PATCH /api/registrar/batches/:id

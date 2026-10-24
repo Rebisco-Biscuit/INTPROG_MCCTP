@@ -8,7 +8,6 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
-import { PrismaService } from '../prisma/prisma.service';
 
 @Module({
   imports: [
@@ -30,7 +29,13 @@ import { PrismaService } from '../prisma/prisma.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtAuthGuard, RolesGuard, PrismaService],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    JwtAuthGuard,
+    // PrismaService comes from the global PrismaModule (one shared pool)
+    RolesGuard,
+  ],
   exports: [AuthService, JwtAuthGuard, RolesGuard],
 })
 export class AuthModule {}

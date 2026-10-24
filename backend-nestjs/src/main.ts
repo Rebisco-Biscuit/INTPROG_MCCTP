@@ -12,9 +12,7 @@ async function bootstrap() {
     }),
   );
 
-  const allowedOrigins = (
-    process.env.FRONTEND_URL ?? 'http://localhost:5173'
-  )
+  const allowedOrigins = (process.env.FRONTEND_URL ?? 'http://localhost:5173')
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean);
@@ -29,4 +27,7 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 
-bootstrap();
+bootstrap().catch((error) => {
+  console.error('Failed to start the server:', error);
+  process.exit(1);
+});

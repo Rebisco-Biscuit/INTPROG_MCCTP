@@ -14,6 +14,7 @@ import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/roles.decorator';
 import { Role } from '../../../common/enums/role.enum';
+import type { AuthenticatedUser } from '../../../common/types/authenticated-user.type';
 import { batch_status_enum } from '../../../generated/prisma/client';
 import { BatchesService } from '../../registrar/batches/batches.service';
 import { CreateBatchDto } from '../../registrar/batches/dto/create-batch.dto';
@@ -66,7 +67,10 @@ export class AdminBatchesController {
   }
 
   @Post()
-  create(@Body() dto: CreateBatchDto, @Request() req: any) {
+  create(
+    @Body() dto: CreateBatchDto,
+    @Request() req: { user: AuthenticatedUser },
+  ) {
     return this.batchesService.create(dto, req.user?.id);
   }
 

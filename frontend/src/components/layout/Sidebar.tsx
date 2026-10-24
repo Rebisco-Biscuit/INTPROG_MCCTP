@@ -57,8 +57,13 @@ const sidebarConfig: Record<
         items: [
           {
             label: 'Dashboard',
-            path: '/admin/AdminDashboard',
+            path: '/admin/dashboard',
             icon: 'fa-solid fa-gauge-high',
+          },
+          {
+            label: 'Announcements',
+            path: '/admin/announcements',
+            icon: 'fa-solid fa-bullhorn',
           },
         ],
       },
@@ -111,6 +116,11 @@ const sidebarConfig: Record<
             path: '/admin/reports',
             icon: 'fa-solid fa-chart-column',
           },
+          {
+            label: 'Import Data',
+            path: '/admin/import-data',
+            icon: 'fa-solid fa-file-import',
+          },
         ],
       },
 
@@ -148,6 +158,11 @@ const sidebarConfig: Record<
             label: 'Dashboard',
             path: '/trainer/dashboard',
             icon: 'fa-solid fa-gauge-high',
+          },
+          {
+            label: 'Announcements',
+            path: '/trainer/announcements',
+            icon: 'fa-solid fa-bullhorn',
           },
         ],
       },
@@ -287,6 +302,11 @@ const sidebarConfig: Record<
             path: '/encoder/dashboard',
             icon: 'fa-solid fa-gauge-high',
           },
+          {
+            label: 'Announcements',
+            path: '/encoder/announcements',
+            icon: 'fa-solid fa-bullhorn',
+          },
         ],
       },
 
@@ -341,6 +361,11 @@ const sidebarConfig: Record<
             path: '/registrar',
             icon: 'fa-solid fa-gauge-high',
           },
+          {
+            label: 'Announcements',
+            path: '/registrar/announcements',
+            icon: 'fa-solid fa-bullhorn',
+          },
         ],
       },
 
@@ -374,6 +399,11 @@ const sidebarConfig: Record<
         title: 'Records',
         items: [
           {
+            label: 'Trainees',
+            path: '/registrar/trainees',
+            icon: 'fa-solid fa-users',
+          },
+          {
             label: 'Trainee Records',
             path: '/registrar/records',
             icon: 'fa-solid fa-folder-open',
@@ -387,6 +417,11 @@ const sidebarConfig: Record<
             label: 'Inventory',
             path: '/registrar/inventory',
             icon: 'fa-solid fa-boxes-stacked',
+          },
+          {
+            label: 'Payments',
+            path: '/registrar/payments',
+            icon: 'fa-solid fa-peso-sign',
           },
         ],
       },
