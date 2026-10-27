@@ -152,7 +152,7 @@ return ( <Routes>
 <Route
   path="/admin/inventory"
   element={
-    <ProtectedRoute allowedRoles={['ADMIN']}>
+    <ProtectedRoute allowedRoles={['ADMIN', 'REGISTRAR']}>
       <AdminInventoryPage />
     </ProtectedRoute>
   }
@@ -204,6 +204,15 @@ return ( <Routes>
       </ProtectedRoute>
     }
   />
+
+  <Route
+  path="/registrar/inventory"
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN', 'REGISTRAR']}>
+      <AdminInventoryPage />
+    </ProtectedRoute>
+  }
+/>
 
   <Route
     path="/registrar/payments"
