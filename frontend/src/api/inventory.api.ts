@@ -1,6 +1,8 @@
 
 import { apiFetch } from './auth.api'
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+
 export type InventoryStockLevel =
   | 'in_stock'
   | 'low_stock'
@@ -118,7 +120,7 @@ async function inventoryRequest<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
-  const response = await apiFetch(path, init)
+  const response = await apiFetch(`${API_BASE_URL}${path}`, init)
   const result = await response.json().catch(() => null)
 
   if (!response.ok) {
