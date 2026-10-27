@@ -21,6 +21,7 @@ import { AnnouncementsModule } from './announcements/announcements.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AdminTraineesModule } from './users/admin/trainee-information/trainees.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { TraineeModule } from './users/trainee/trainee.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { InventoryModule } from './inventory/inventory.module';
     PaymentsModule,
     AdminTraineesModule,
     InventoryModule,
+    TraineeModule,
   ],
 
   controllers: [SessionsController, AppController],
