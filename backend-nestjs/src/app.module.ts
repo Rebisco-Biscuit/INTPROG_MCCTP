@@ -20,7 +20,6 @@ import { AdminEnrollmentsModule } from './users/admin/enrollments/enrollments.mo
 import { AnnouncementsModule } from './announcements/announcements.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AdminTraineesModule } from './users/admin/trainee-information/trainees.module';
-import { InventoryModule } from './inventory/inventory.module';
 import { TraineeModule } from './users/trainee/trainee.module';
 
 @Module({
@@ -51,7 +50,6 @@ import { TraineeModule } from './users/trainee/trainee.module';
     AnnouncementsModule,
     PaymentsModule,
     AdminTraineesModule,
-    InventoryModule,
     TraineeModule,
   ],
 
